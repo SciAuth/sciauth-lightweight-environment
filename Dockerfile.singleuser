@@ -1,0 +1,22 @@
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
+# Modified by Brian Aydemir <baydemir@morgridge.org>.
+
+ARG SINGLEUSER_BASE_IMAGE
+FROM $SINGLEUSER_BASE_IMAGE
+
+## Update the base install and add required packages.
+
+USER root
+
+ARG JUPYTERHUB_VERSION
+
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* \
+    #
+    && python3 -m pip install --no-cache-dir \
+         jupyterhub==$JUPYTERHUB_VERSION
+
+USER jovyan

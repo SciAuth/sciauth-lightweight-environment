@@ -13,3 +13,6 @@
 
 ## Build artifacts.
 /dist
+
+## Sensitive configuration data.
+/secrets

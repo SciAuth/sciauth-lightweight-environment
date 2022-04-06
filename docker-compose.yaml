@@ -1,0 +1,88 @@
+---
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
+# Modified by Brian Aydemir <baydemir@morgridge.org>.
+
+version: "3.0"
+
+#---------------------------------------------------------------------------
+
+services:
+
+  # Configuration specified in the `.env` file and `secrets` directory is
+  # passed into the services via the `env_file` and `environment` sections.
+
+  hub-db:
+    image: postgres:9.5
+    container_name: jupyterhub-db
+    restart: always
+
+    env_file:
+    - secrets/postgres.env
+
+    environment:
+      PGDATA: ${DB_VOLUME_PATH}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+    volumes:
+    - db:${DB_VOLUME_PATH}
+
+  hub:
+    depends_on:
+    - hub-db
+
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyterhub
+      args:
+        JUPYTERHUB_VERSION: ${JUPYTERHUB_VERSION}
+
+    image: jupyterhub
+    container_name: jupyterhub
+    restart: always
+
+    command: >
+      jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
+
+    env_file:
+    - secrets/oauth.env
+    - secrets/postgres.env
+
+    environment:
+      DOCKER_NETWORK_NAME: ${DOCKER_NETWORK_NAME}
+
+      HUB_VOLUME_PATH: ${HUB_VOLUME_PATH}
+
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_HOST: hub-db
+
+      SINGLEUSER_IMAGE: ${SINGLEUSER_IMAGE}
+      SINGLEUSER_CMD: ${SINGLEUSER_CMD}
+      SINGLEUSER_VOLUME_PATH: ${SINGLEUSER_VOLUME_PATH}
+
+    links:
+    - hub-db
+
+    ports:
+    - 443:443
+
+    volumes:
+    - hub:${HUB_VOLUME_PATH}
+    - /var/run/docker.sock:/var/run/docker.sock:rw
+
+#---------------------------------------------------------------------------
+
+## Create these networks and volumes via `make build`.
+
+networks:
+  default:
+    name: ${DOCKER_NETWORK_NAME}
+    external: true
+
+volumes:
+  hub:
+    name: ${HUB_VOLUME_NAME}
+    external: true
+  db:
+    name: ${DB_VOLUME_NAME}
+    external: true
