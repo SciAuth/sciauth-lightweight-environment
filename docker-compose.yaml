@@ -56,6 +56,8 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: hub-db
 
+      SCIAUTH_SERVICE_PORT: ${SCIAUTH_SERVICE_PORT}
+
       SINGLEUSER_IMAGE: ${SINGLEUSER_IMAGE}
       SINGLEUSER_CMD: ${SINGLEUSER_CMD}
       SINGLEUSER_VOLUME_PATH: ${SINGLEUSER_VOLUME_PATH}
@@ -66,18 +68,26 @@ services:
     ports:
     - 443:443
 
+    secrets:
+    - source: sciauth-service-config
+      target: /etc/sciauth/jupyterhub_svc_config.yaml
+
     volumes:
     - hub:${HUB_VOLUME_PATH}
     - /var/run/docker.sock:/var/run/docker.sock:rw
 
 #---------------------------------------------------------------------------
 
-## Create these networks and volumes via `make build`.
+## Create the networks and volumes below via `make build`.
 
 networks:
   default:
     name: ${DOCKER_NETWORK_NAME}
     external: true
+
+secrets:
+  sciauth-service-config:
+    file: secrets/jupyterhub_svc_config.yaml
 
 volumes:
   hub:

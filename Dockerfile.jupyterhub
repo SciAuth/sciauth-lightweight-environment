@@ -19,7 +19,8 @@ RUN apt-get update \
     && python3 -m pip install --no-cache-dir \
          dockerspawner~=12.1 \
          oauthenticator~=14.2 \
-         psycopg2-binary~=2.9
+         psycopg2-binary~=2.9 \
+         sciauth-jupyter==0.0.1
 
 ## Install SSL certificates.
 

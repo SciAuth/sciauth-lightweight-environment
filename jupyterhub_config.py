@@ -3,6 +3,7 @@
 # Modified by Brian Aydemir <baydemir@morgridge.org>.
 
 import os
+import sys
 
 c = get_config()
 
@@ -59,3 +60,16 @@ c.DockerSpawner.remove_containers = True
 
 ## Enable debug logging.
 c.DockerSpawner.debug = True
+
+# --------------------------------------------------------------------------
+
+## Configure the SciAuth service.
+sciauth_service_port = os.environ["SCIAUTH_SERVICE_PORT"]
+c.JupyterHub.services = [
+    {
+        "name": "sciauth",
+        "url": f"http://jupyterhub:{sciauth_service_port}",
+        "command": [sys.executable, "-m", "sciauth.jupyter.token_service"],
+        "environment": {"_sciauth_SERVICE_PORT": sciauth_service_port},
+    },
+]
