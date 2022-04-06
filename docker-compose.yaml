@@ -76,6 +76,29 @@ services:
     - hub:${HUB_VOLUME_PATH}
     - /var/run/docker.sock:/var/run/docker.sock:rw
 
+  token-issuer:
+
+    image: hub.opensciencegrid.org/sciauth/lightweight-issuer:1.0.0
+    container_name: token-issuer
+    restart: always
+
+    environment:
+      HOSTNAME: localhost
+
+    ports:
+    - 8443:8443
+
+    secrets:
+    - source: token-issuer-keys
+      target: /opt/scitokens-server/etc/keys.jwk
+    - source: token-issuer-ssl-crt
+      target: /opt/tomcat/conf/hostcert.pem
+    - source: token-issuer-ssl-key
+      target: /opt/tomcat/conf/hostkey.pem
+
+    volumes:
+    - token-issuer:${TOKEN_ISSUER_VOLUME_PATH}
+
 #---------------------------------------------------------------------------
 
 ## Create the networks and volumes below via `make build`.
@@ -88,6 +111,12 @@ networks:
 secrets:
   sciauth-service-config:
     file: secrets/jupyterhub_svc_config.yaml
+  token-issuer-keys:
+    file: secrets/token-issuer.jwks
+  token-issuer-ssl-crt:
+    file: secrets/token-issuer.crt
+  token-issuer-ssl-key:
+    file: secrets/token-issuer.key
 
 volumes:
   hub:
@@ -95,4 +124,7 @@ volumes:
     external: true
   db:
     name: ${DB_VOLUME_NAME}
+    external: true
+  token-issuer:
+    name: ${TOKEN_ISSUER_VOLUME_NAME}
     external: true

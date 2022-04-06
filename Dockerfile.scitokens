@@ -1,0 +1,9 @@
+# Run SciTokens and other assorted commands implemented in Python.
+#
+# This image obviates the need to set up a virtual environment or similar.
+
+FROM python:3
+
+WORKDIR /usr/src/app
+
+RUN python3 -m pip install scitokens

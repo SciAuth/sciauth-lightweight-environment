@@ -4,7 +4,7 @@
 
 include .env
 
-.PHONY: all build clean clean-docker docker docker-images docker-network docker-volumes secrets secrets-oauth secrets-postgres secrets-ssl
+.PHONY: all build clean clean-docker docker docker-images docker-network docker-volumes secrets secrets-oauth secrets-postgres secrets-ssl secrets-token-issuer
 
 all: build
 
@@ -30,14 +30,15 @@ docker-network:
 docker-volumes:
 	docker volume inspect $(HUB_VOLUME_NAME) >/dev/null 2>&1 || docker volume create --name $(HUB_VOLUME_NAME)
 	docker volume inspect $(DB_VOLUME_NAME) >/dev/null 2>&1 || docker volume create --name $(DB_VOLUME_NAME)
+	docker volume inspect $(TOKEN_ISSUER_VOLUME_NAME) >/dev/null 2>&1 || docker volume create --name $(TOKEN_ISSUER_VOLUME_NAME)
 
 clean-docker:
 	-docker network rm $(DOCKER_NETWORK_NAME)
-	-docker volume rm $(HUB_VOLUME_NAME) $(DB_VOLUME_NAME)
+	-docker volume rm $(HUB_VOLUME_NAME) $(DB_VOLUME_NAME) $(TOKEN_ISSUER_VOLUME_NAME)
 
 #---------------------------------------------------------------------------
 
-secrets: secrets-oauth secrets-postgres secrets-ssl
+secrets: secrets-oauth secrets-postgres secrets-ssl secrets-token-issuer
 
 secrets-oauth: secrets/oauth.env
 
@@ -61,9 +62,22 @@ secrets/postgres.env:
 	@echo "Generating postgres password in $@."
 	@echo "POSTGRES_PASSWORD=$(shell openssl rand -hex 32)" > $@
 
-secrets-ssl: secrets/hub.crt secrets/hub.key
+secrets-ssl: secrets/hub.crt secrets/hub.key secrets/token-issuer.crt secrets/token-issuer.key
 
 secrets/hub.crt secrets/hub.key:
 	mkdir -m u=rwx,go= -p secrets/
 	@echo "Generating SSL certificate for localhost in secrets/hub.crt."
 	openssl req -x509 -subj "/CN=localhost" -newkey rsa:4096 -out secrets/hub.crt -keyout secrets/hub.key -sha256 -days 365 -nodes
+
+secrets/token-issuer.crt secrets/token-issuer.key:
+	mkdir -m u=rwx,go= -p secrets/
+	@echo "Generating SSL certificate for localhost in secrets/token-issuer.crt."
+	openssl req -x509 -subj "/CN=localhost" -newkey rsa:4096 -out secrets/token-issuer.crt -keyout secrets/token-issuer.key -sha256 -days 365 -nodes
+
+secrets-token-issuer: secrets/token-issuer.jwks
+
+secrets/token-issuer.jwks:
+	mkdir -m u=rwx,go= -p secrets/
+	docker build -f Dockerfile.scitokens -t scitokens .
+	docker run -it --rm scitokens python3 -m scitokens.tools.admin_create_key --create-keys --pem-private > secrets/token-issuer.pem
+	docker run -it --rm -v $(shell pwd)/secrets:/secrets scitokens python3 -m scitokens.tools.admin_create_key --private-key /secrets/token-issuer.pem --jwks-private > secrets/token-issuer.jwks
