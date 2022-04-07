@@ -82,8 +82,11 @@ services:
     container_name: token-issuer
     restart: always
 
+    env_file:
+    - secrets/oauth.env
+
     environment:
-      HOSTNAME: localhost
+      HOSTNAME: localhost:8443
 
     ports:
     - 8443:8443

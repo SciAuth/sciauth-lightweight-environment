@@ -30,9 +30,9 @@ pg_password = os.environ["POSTGRES_PASSWORD"]
 pg_db = os.environ["POSTGRES_DB"]
 c.JupyterHub.db_url = f"postgresql://postgres:{pg_password}@{pg_host}/{pg_db}"
 
-## Authenticate users with GitHub OAuth.
-c.JupyterHub.authenticator_class = "oauthenticator.GitHubOAuthenticator"
-c.GitHubOAuthenticator.oauth_callback_url = os.environ["OAUTH_CALLBACK_URL"]
+## Authenticate users with CILogon.
+c.JupyterHub.authenticator_class = "oauthenticator.CILogonOAuthenticator"
+c.CILogonOAuthenticator.oauth_callback_url = os.environ["OAUTH_CALLBACK_URL"]
 
 # --------------------------------------------------------------------------
 

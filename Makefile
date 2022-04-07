@@ -47,11 +47,7 @@ secrets/oauth.env:
 	@echo ""
 	@echo "ERROR: No such file: $@"
 	@echo ""
-	@echo "Create this file, and add the following three lines:"
-	@echo ""
-	@echo "GITHUB_CLIENT_ID=<GitHub OAuth2 Client ID>"
-	@echo "GITHUB_CLIENT_SECRET=<GitHub OAuth2 Client Secret>"
-	@echo "OAUTH_CALLBACK_URL=https://localhost/hub/oauth_callback"
+	@echo "Create this file based on templates/oauth.env."
 	@echo ""
 	@exit 1
 
