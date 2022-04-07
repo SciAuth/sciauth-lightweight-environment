@@ -45,7 +45,7 @@ version = "0.0.1"
 description = "SciAuth demo application for PEARC22"
 license = "Apache-2.0"
 authors = ["Brian Aydemir <baydemir@morgridge.org>"]
-repository = "https://github.com/scitokens/pearc22-demo"
+repository = "https://github.com/SciAuth/sciauth-lightweight-environment"
 packages = []
 
 
