@@ -71,8 +71,14 @@ secrets/hub.crt secrets/hub.key:
 
 secrets/token-issuer.crt secrets/token-issuer.key:
 	mkdir -m u=rwx,go= -p secrets/
-	@echo "Generating SSL certificate for localhost in secrets/token-issuer.crt."
-	openssl req -x509 -subj "/CN=localhost" -newkey rsa:4096 -out secrets/token-issuer.crt -keyout secrets/token-issuer.key -sha256 -days 365 -nodes
+	@echo "Generating SSL certificate for the token issuer in secrets/token-issuer.crt."
+
+	printf '[req]\n' > secrets/token-issuer.req
+	printf 'distinguished_name=req\n' >> secrets/token-issuer.req
+	printf '[san]\n' >> secrets/token-issuer.req
+	printf 'subjectAltName=DNS:localhost,DNS:token-issuer\n' >> secrets/token-issuer.req
+
+	openssl req -x509 -subj "/CN=localhost" -newkey rsa:4096 -out secrets/token-issuer.crt -keyout secrets/token-issuer.key -sha256 -days 365 -nodes -extensions san -config secrets/token-issuer.req
 
 secrets-token-issuer: secrets/token-issuer.jwks
 
