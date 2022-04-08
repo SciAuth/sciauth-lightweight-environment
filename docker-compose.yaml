@@ -77,8 +77,7 @@ services:
     - /var/run/docker.sock:/var/run/docker.sock:rw
 
   token-issuer:
-
-    image: hub.opensciencegrid.org/sciauth/lightweight-issuer:1.0.0
+    image: hub.opensciencegrid.org/sciauth/lightweight-issuer:latest
     container_name: token-issuer
     restart: always
 

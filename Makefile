@@ -9,7 +9,7 @@ include .env
 all: build
 
 build: config docker secrets
-	docker compose build
+	docker compose build --pull
 
 clean: clean-docker
 
@@ -27,6 +27,7 @@ docker: docker-images docker-network docker-volumes
 docker-images:
 	docker build -f Dockerfile.singleuser \
 	  -t $(SINGLEUSER_IMAGE) \
+	  --pull \
 	  --build-arg JUPYTERHUB_VERSION=$(JUPYTERHUB_VERSION) \
 	  --build-arg SINGLEUSER_BASE_IMAGE=$(SINGLEUSER_BASE_IMAGE) \
 	  .
