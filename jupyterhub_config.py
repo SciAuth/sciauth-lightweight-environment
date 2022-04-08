@@ -61,6 +61,13 @@ c.DockerSpawner.remove_containers = True
 ## Enable debug logging.
 c.DockerSpawner.debug = True
 
+## Configure HTCondor's command line utilities.
+c.DockerSpawner.environment = {
+    "_condor_CONDOR_HOST": "htcondor.localdomain",
+    "_condor_SCHEDD_HOST": "",
+    "_condor_SCHEDD_NAME": "schedd@htcondor.localdomain",
+}
+
 # --------------------------------------------------------------------------
 
 ## Configure the SciAuth service.

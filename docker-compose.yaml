@@ -29,7 +29,9 @@ services:
 
   hub:
     depends_on:
+    - htcondor
     - hub-db
+    - token-issuer
 
     build:
       context: .
@@ -103,6 +105,23 @@ services:
     volumes:
     - token-issuer:${TOKEN_ISSUER_VOLUME_PATH}
 
+  htcondor:
+    image: htcondor/mini:9.7-el7
+    container_name: htcondor.localdomain
+    restart: always
+
+    ports:
+    - 9618:9618
+
+    secrets:
+    - source: htcondor-end-to-end-env
+      target: /etc/condor/config.d/90-end-to-end-env
+    - source: htcondor-minicondor
+      target: /etc/condor/config.d/00-minicondor
+    - source: htcondor-mapfile
+      target: /etc/condor/condor_mapfile
+
+
 #---------------------------------------------------------------------------
 
 ## Create the networks and volumes below via `make build`.
@@ -113,6 +132,12 @@ networks:
     external: true
 
 secrets:
+  htcondor-end-to-end-env:
+    file: config/90-end-to-end-env
+  htcondor-mapfile:
+    file: config/condor_mapfile
+  htcondor-minicondor:
+    file: config/00-minicondor
   sciauth-service-config:
     file: secrets/jupyterhub_svc_config.yaml
   token-issuer-keys:
