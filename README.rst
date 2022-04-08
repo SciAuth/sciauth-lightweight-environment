@@ -1,10 +1,9 @@
-pearc22-demo
-============
+This repository provides an end-to-end software environment that enables experimentation with using SciTokens_ for capability-based authorization in scientific computing.
+This set of interconnected Docker containers enables science projects to gain experience with the SciTokens model prior to adoption.
+It is a product of the SciAuth_ project, which supports the adoption of the SciTokens model through community engagement, support for coordinated adoption of community standards, assistance with software integration, security analysis and threat modeling, training, and workforce development.
 
-SciAuth demo application for PEARC22_
-
-.. _PEARC22: https://pearc.acm.org/pearc22/
-
+.. _SciTokens: https://scitokens.org/
+.. _SciAUth: https://sciauth.org/
 
 History
 -------
