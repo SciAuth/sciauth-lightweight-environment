@@ -69,7 +69,7 @@ c.JupyterHub.services = [
     {
         "name": "sciauth",
         "url": f"http://jupyterhub:{sciauth_service_port}",
-        "command": [sys.executable, "-m", "sciauth.jupyter.token_service"],
+        "command": [sys.executable, "-m", "scitokens.jupyter.token_service"],
         "environment": {"_sciauth_SERVICE_PORT": sciauth_service_port},
     },
 ]

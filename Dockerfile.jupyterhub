@@ -20,7 +20,7 @@ RUN apt-get update \
          dockerspawner~=12.1 \
          oauthenticator~=14.2 \
          psycopg2-binary~=2.9 \
-         sciauth-jupyter==0.0.2
+         scitokens-jupyter==0.0.3
 
 ## Install SSL certificates.
 
