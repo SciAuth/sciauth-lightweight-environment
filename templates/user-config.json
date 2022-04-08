@@ -1,0 +1,27 @@
+{
+  "comment": [
+    "This JSON file contains claims (i.e. assertions about each user) which are used in issuing access tokens.",
+    "The key is the eppn of each user and the eduPersonEntitlement (a JSON array) containing the permissions",
+    "explicitly granted. These will simply be returned as the scope in the access token.",
+    "https://wiki.refeds.org/display/STAN/eduPerson+2020-01#eduPerson202001-eduPersonEntitlement"
+  ],
+  "http://cilogon.org/serverA/users/279521": {
+    "eduPersonEntitlement": [
+      "my_rabbit_server.write:xrd-mon/shoveled-xrd"
+    ],
+    "audience": "my_rabbit_server"
+  },
+  "http://cilogon.org/serverA/users/27161": {
+    "eduPersonEntitlement": [
+      "my_rabbit_server.write:xrd-mon/shoveled-xrd"
+    ],
+    "audience": "my_rabbit_server"
+  },
+  "default_claim": {
+    "comment": [
+      "This is the default claim returned by the handler **if** you specify use_default",
+      "as part of the st.qdl script"
+    ],
+    "eduPersonEntitlement": ["storage.read:/public/guest"]
+  }
+}

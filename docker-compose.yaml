@@ -98,6 +98,8 @@ services:
       target: /opt/tomcat/conf/hostcert.pem
     - source: token-issuer-ssl-key
       target: /opt/tomcat/conf/hostkey.pem
+    - source: token-issuer-user-config
+      target: /opt/scitokens-server/var/qdl/user-config.txt
 
     volumes:
     - token-issuer:${TOKEN_ISSUER_VOLUME_PATH}
@@ -120,6 +122,8 @@ secrets:
     file: secrets/token-issuer.crt
   token-issuer-ssl-key:
     file: secrets/token-issuer.key
+  token-issuer-user-config:
+    file: secrets/user-config.json
 
 volumes:
   hub:

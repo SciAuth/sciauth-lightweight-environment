@@ -1,0 +1,30 @@
+oauth2:
+
+- name: GitHub
+  id: github
+
+  client_id: <GitHub OAuth Client ID>
+  client_secret: <GitHub OAuth Client Secret>
+
+  auth_url: https://github.com/login/oauth/authorize
+  token_url: https://github.com/login/oauth/access_token
+  scope: read:user repo
+
+- name: Lightweight Token Issuer
+  id: lightweight-issuer
+
+  #
+  # When registering this client with the lightweight token issuer:
+  #
+  #   1. Set the callback URL to
+  #      "https://localhost/services/sciauth/tokens/lightweight-issuer/auth".
+  #
+  #   2. Set the scopes such that they exactly match the `scope` field below.
+  #
+
+  client_id: <obtain from https://localhost:8443/scitokens-server/register>
+  client_secret: <obtain from https://localhost:8443/scitokens-server/register>
+
+  auth_url: https://localhost:8443/scitokens-server/authorize
+  token_url: https://localhost:8443/scitokens-server/authorize
+  scope: openid profile

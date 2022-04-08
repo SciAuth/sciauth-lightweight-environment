@@ -4,14 +4,21 @@
 
 include .env
 
-.PHONY: all build clean clean-docker docker docker-images docker-network docker-volumes secrets secrets-oauth secrets-postgres secrets-ssl secrets-token-issuer
+.PHONY: all build clean clean-docker config docker docker-images docker-network docker-volumes secrets secrets-oauth secrets-postgres secrets-ssl secrets-token-issuer
 
 all: build
 
-build: docker secrets
+build: config docker secrets
 	docker compose build
 
 clean: clean-docker
+
+#---------------------------------------------------------------------------
+
+config:
+	mkdir -m u=rwx,go= -p secrets/
+	test -e secrets/jupyterhub_svc_config.yaml || cp templates/jupyterhub_svc_config.yaml secrets/
+	test -e secrets/user-config.json || cp templates/user-config.json secrets/
 
 #---------------------------------------------------------------------------
 
