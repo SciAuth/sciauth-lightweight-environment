@@ -40,7 +40,7 @@ sqlite_cache = true
 
 
 [tool.poetry]
-name = "pearc22_demo"
+name = "sciauth_lightweight_environment"
 version = "0.0.1"
 description = "Docker Compose environment for experimenting with SciTokens"
 license = "Apache-2.0"
