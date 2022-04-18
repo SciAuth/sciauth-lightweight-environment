@@ -136,8 +136,6 @@ secrets:
     file: config/90-end-to-end-env
   htcondor-mapfile:
     file: config/condor_mapfile
-  htcondor-minicondor:
-    file: config/00-minicondor
   sciauth-service-config:
     file: secrets/jupyterhub_svc_config.yaml
   token-issuer-keys:
@@ -148,6 +146,9 @@ secrets:
     file: secrets/token-issuer.key
   token-issuer-user-config:
     file: secrets/user-config.json
+
+  htcondor-minicondor:
+    file: overrides/htcondor/00-minicondor
 
 volumes:
   hub:

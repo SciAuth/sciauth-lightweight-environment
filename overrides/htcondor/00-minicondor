@@ -23,8 +23,9 @@ use ROLE: Execute
 
 # --- NETWORK SETTINGS ---
 
-# Unlike the default "minicondor" configuration, we want this pool to be
-# accessible to the world, and we want the schedd to have a fixed name.
+# Unlike the out-of-the-box "minicondor" configuration, we want the pool to
+# be accessible to outside this host, and we want the schedd to have a fixed
+# name.
 
 # NETWORK_INTERFACE = 127.0.0.1
 # BIND_ALL_INTERFACES = False
