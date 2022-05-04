@@ -39,7 +39,7 @@ services:
       args:
         JUPYTERHUB_VERSION: ${JUPYTERHUB_VERSION}
 
-    image: jupyterhub
+    image: ${JUPYTERHUB_IMAGE}
     container_name: jupyterhub
     restart: always
 
@@ -58,11 +58,11 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: hub-db
 
-      SCIAUTH_SERVICE_PORT: ${SCIAUTH_SERVICE_PORT}
-
       SINGLEUSER_IMAGE: ${SINGLEUSER_IMAGE}
       SINGLEUSER_CMD: ${SINGLEUSER_CMD}
       SINGLEUSER_VOLUME_PATH: ${SINGLEUSER_VOLUME_PATH}
+
+      TOKEN_SERVICE_PORT: ${TOKEN_SERVICE_PORT}
 
     links:
     - hub-db
@@ -80,7 +80,7 @@ services:
 
   token-issuer:
     image: hub.opensciencegrid.org/sciauth/lightweight-issuer:latest
-    container_name: token-issuer
+    container_name: token-issuer.localdomain
     restart: always
 
     env_file:
@@ -141,9 +141,9 @@ secrets:
   token-issuer-keys:
     file: secrets/token-issuer.jwks
   token-issuer-ssl-crt:
-    file: secrets/token-issuer.crt
+    file: secrets/tls.crt
   token-issuer-ssl-key:
-    file: secrets/token-issuer.key
+    file: secrets/tls.key
   token-issuer-user-config:
     file: secrets/user-config.json
 

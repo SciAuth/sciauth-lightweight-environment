@@ -22,10 +22,10 @@ RUN apt-get update \
          psycopg2-binary~=2.9 \
          scitokens-jupyter==0.0.3
 
-## Install SSL certificates.
+## Install TLS certificates.
 
-ENV SSL_CERT /srv/jupyterhub/secrets/hub.crt
-ENV SSL_KEY /srv/jupyterhub/secrets/hub.key
-COPY secrets/hub.crt $SSL_CERT
-COPY secrets/hub.key $SSL_KEY
+ENV TLS_CRT /srv/jupyterhub/secrets/hub.crt
+ENV TLS_KEY /srv/jupyterhub/secrets/hub.key
+COPY secrets/tls.crt $TLS_CRT
+COPY secrets/tls.key $TLS_KEY
 RUN chmod -R u=rwX,go= /srv/jupyterhub/secrets/

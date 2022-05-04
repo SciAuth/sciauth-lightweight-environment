@@ -7,16 +7,41 @@ import sys
 
 c = get_config()
 
-# We rely on environment variables to configure JupyterHub so that we
-# can avoid having to rebuild the container's image every time we change
-# a configuration parameter.
+# The first section of settings is the only one that is specific to the
+# lightweight environment. The remaining settings are standard configuration
+# for JupyterHub and DockerSpawner.
+
+# --------------------------------------------------------------------------
+
+## Authenticate users with CILogon.
+c.JupyterHub.authenticator_class = "oauthenticator.CILogonOAuthenticator"
+c.CILogonOAuthenticator.additional_username_claims = ["email"]
+c.CILogonOAuthenticator.oauth_callback_url = os.environ["OAUTH_CALLBACK_URL"]
+
+## Configure the SciTokens service.
+scitokens_service_port = os.environ["SCITOKENS_SERVICE_PORT"]
+c.JupyterHub.services = [
+    {
+        "name": "scitokens",
+        "url": f"http://jupyterhub:{scitokens_service_port}",
+        "command": [sys.executable, "-m", "scitokens.jupyter.token_service"],
+        "environment": {"SCITOKENS_SERVICE_PORT": scitokens_service_port},
+    },
+]
+
+## Configure HTCondor's command line utilities.
+c.DockerSpawner.environment = {
+    "_condor_CONDOR_HOST": "htcondor.localdomain",
+    "_condor_SCHEDD_HOST": "",  # suppress the personal HTCondor pool
+    "_condor_SCHEDD_NAME": "schedd@htcondor.localdomain",
+}
 
 # --------------------------------------------------------------------------
 
 ## Configure networking.
 c.JupyterHub.port = 443
-c.JupyterHub.ssl_key = os.environ["SSL_KEY"]
-c.JupyterHub.ssl_cert = os.environ["SSL_CERT"]
+c.JupyterHub.ssl_cert = os.environ["TLS_CRT"]
+c.JupyterHub.ssl_key = os.environ["TLS_KEY"]
 
 c.JupyterHub.hub_ip = "jupyterhub"
 c.JupyterHub.hub_port = 8080
@@ -30,14 +55,13 @@ pg_password = os.environ["POSTGRES_PASSWORD"]
 pg_db = os.environ["POSTGRES_DB"]
 c.JupyterHub.db_url = f"postgresql://postgres:{pg_password}@{pg_host}/{pg_db}"
 
-## Authenticate users with CILogon.
-c.JupyterHub.authenticator_class = "oauthenticator.CILogonOAuthenticator"
-c.CILogonOAuthenticator.oauth_callback_url = os.environ["OAUTH_CALLBACK_URL"]
-
 # --------------------------------------------------------------------------
 
 ## Spawn single-user notebooks as Docker containers.
 c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
+
+## Enable debug logging.
+c.DockerSpawner.debug = True
 
 ## Spawn containers from this image.
 c.DockerSpawner.container_image = os.environ["SINGLEUSER_IMAGE"]
@@ -57,26 +81,3 @@ c.DockerSpawner.volumes = {"jupyterhub-user-{username}": notebook_dir}
 
 ## Remove containers once they are stopped.
 c.DockerSpawner.remove_containers = True
-
-## Enable debug logging.
-c.DockerSpawner.debug = True
-
-## Configure HTCondor's command line utilities.
-c.DockerSpawner.environment = {
-    "_condor_CONDOR_HOST": "htcondor.localdomain",
-    "_condor_SCHEDD_HOST": "",
-    "_condor_SCHEDD_NAME": "schedd@htcondor.localdomain",
-}
-
-# --------------------------------------------------------------------------
-
-## Configure the SciAuth service.
-sciauth_service_port = os.environ["SCIAUTH_SERVICE_PORT"]
-c.JupyterHub.services = [
-    {
-        "name": "sciauth",
-        "url": f"http://jupyterhub:{sciauth_service_port}",
-        "command": [sys.executable, "-m", "scitokens.jupyter.token_service"],
-        "environment": {"_sciauth_SERVICE_PORT": sciauth_service_port},
-    },
-]
