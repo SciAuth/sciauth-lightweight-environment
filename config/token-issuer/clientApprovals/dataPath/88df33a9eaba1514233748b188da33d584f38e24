@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>OA4MP stream store</comment>
+<entry key="approver">auto-approver</entry>
+<entry key="approved">true</entry>
+<entry key="approval_ts">2022-08-31T17:45:06.593Z</entry>
+<entry key="client_id">oa4mp:/client_id/32163b076dd5194a29cc32849011c92f</entry>
+<entry key="status">approved</entry>
+</properties>

@@ -1,0 +1,5 @@
+FROM htcondor/mini:9.10-el7
+
+COPY secrets/tls.crt /etc/pki/ca-trust/source/anchors/lightweight-environment.crt
+
+RUN update-ca-trust extract

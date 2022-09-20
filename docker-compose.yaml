@@ -9,11 +9,8 @@ version: "3.0"
 
 services:
 
-  # Configuration specified in the `.env` file and `secrets` directory is
-  # passed into the services via the `env_file` and `environment` sections.
-
   hub-db:
-    image: postgres:9.5
+    image: postgres:14.2
     container_name: jupyterhub-db
     restart: always
 
@@ -43,8 +40,7 @@ services:
     container_name: jupyterhub
     restart: always
 
-    command: >
-      jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
+    command: jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
 
     env_file:
     - secrets/oauth.env
@@ -62,7 +58,7 @@ services:
       SINGLEUSER_CMD: ${SINGLEUSER_CMD}
       SINGLEUSER_VOLUME_PATH: ${SINGLEUSER_VOLUME_PATH}
 
-      TOKEN_SERVICE_PORT: ${TOKEN_SERVICE_PORT}
+      SCITOKENS_SERVICE_PORT: ${SCITOKENS_SERVICE_PORT}
 
     links:
     - hub-db
@@ -71,15 +67,15 @@ services:
     - 443:443
 
     secrets:
-    - source: sciauth-service-config
-      target: /etc/sciauth/jupyterhub_svc_config.yaml
+    - source: scitokens-service-config
+      target: /etc/scitokens/jupyterhub_service.yaml
 
     volumes:
     - hub:${HUB_VOLUME_PATH}
     - /var/run/docker.sock:/var/run/docker.sock:rw
 
   token-issuer:
-    image: hub.opensciencegrid.org/sciauth/lightweight-issuer:latest
+    image: hub.opensciencegrid.org/sciauth/lightweight-issuer:v1.0.2
     container_name: token-issuer.localdomain
     restart: always
 
@@ -93,11 +89,15 @@ services:
     - 8443:8443
 
     secrets:
+    - source: token-issuer-client
+      target: ${TOKEN_ISSUER_VOLUME_PATH}/clients/dataPath/88df33a9eaba1514233748b188da33d584f38e24
+    - source: token-issuer-client-approval
+      target: ${TOKEN_ISSUER_VOLUME_PATH}/clientApprovals/dataPath/88df33a9eaba1514233748b188da33d584f38e24
     - source: token-issuer-keys
       target: /opt/scitokens-server/etc/keys.jwk
-    - source: token-issuer-ssl-crt
+    - source: tls-crt
       target: /opt/tomcat/conf/hostcert.pem
-    - source: token-issuer-ssl-key
+    - source: tls-key
       target: /opt/tomcat/conf/hostkey.pem
     - source: token-issuer-user-config
       target: /opt/scitokens-server/var/qdl/user-config.txt
@@ -106,7 +106,11 @@ services:
     - token-issuer:${TOKEN_ISSUER_VOLUME_PATH}
 
   htcondor:
-    image: htcondor/mini:9.7-el7
+    build:
+      context: .
+      dockerfile: Dockerfile.htcondor
+
+    image: ${HTCONDOR_IMAGE}
     container_name: htcondor.localdomain
     restart: always
 
@@ -121,8 +125,42 @@ services:
     - source: htcondor-mapfile
       target: /etc/condor/condor_mapfile
 
-
 #---------------------------------------------------------------------------
+
+## These "secrets" are used to inject files into the containers.
+
+secrets:
+
+  htcondor-minicondor:
+    file: config/htcondor/00-minicondor
+
+  htcondor-end-to-end-env:
+    file: config/htcondor/90-end-to-end-env
+
+  htcondor-mapfile:
+    file: config/htcondor/condor_mapfile
+
+  scitokens-service-config:
+    file: secrets/jupyterhub_svc_config.yaml
+
+  token-issuer-keys:
+    file: secrets/token-issuer.jwks
+
+  token-issuer-user-config:
+    file: secrets/user-config.json
+
+  token-issuer-client:
+    file: config/token-issuer/clients/dataPath/88df33a9eaba1514233748b188da33d584f38e24
+
+  token-issuer-client-approval:
+    file: config/token-issuer/clientApprovals/dataPath/88df33a9eaba1514233748b188da33d584f38e24
+
+  ## Shared TLS certificate and key.
+
+  tls-crt:
+    file: secrets/tls.crt
+  tls-key:
+    file: secrets/tls.key
 
 ## Create the networks and volumes below via `make build`.
 
@@ -130,25 +168,6 @@ networks:
   default:
     name: ${DOCKER_NETWORK_NAME}
     external: true
-
-secrets:
-  htcondor-end-to-end-env:
-    file: config/90-end-to-end-env
-  htcondor-mapfile:
-    file: config/condor_mapfile
-  sciauth-service-config:
-    file: secrets/jupyterhub_svc_config.yaml
-  token-issuer-keys:
-    file: secrets/token-issuer.jwks
-  token-issuer-ssl-crt:
-    file: secrets/tls.crt
-  token-issuer-ssl-key:
-    file: secrets/tls.key
-  token-issuer-user-config:
-    file: secrets/user-config.json
-
-  htcondor-minicondor:
-    file: overrides/htcondor/00-minicondor
 
 volumes:
   hub:

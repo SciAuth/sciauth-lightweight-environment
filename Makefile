@@ -9,7 +9,7 @@ include .env
 all: build
 
 build: config docker secrets
-	docker compose build --no-cache --pull
+	docker compose build
 
 clean: clean-docker
 
@@ -40,8 +40,6 @@ docker:
 	# by JupyterHub and not Compose).
 
 	docker build -f Dockerfile.singleuser -t $(SINGLEUSER_IMAGE) \
-	  --no-cache \
-	  --pull \
 	  --build-arg JUPYTERHUB_VERSION=$(JUPYTERHUB_VERSION) \
 	  --build-arg SINGLEUSER_BASE_IMAGE=$(SINGLEUSER_BASE_IMAGE) \
 	  .
@@ -95,7 +93,7 @@ secrets/tls.crt:
 	  -nodes \
 	  -sha256 \
 	  -extensions san \
-	  -config config/tls.req
+	  -config config/certificates/tls.req
 
 secrets/token-issuer.jwks:
 

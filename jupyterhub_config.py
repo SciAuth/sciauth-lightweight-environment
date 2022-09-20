@@ -7,11 +7,11 @@ import sys
 
 c = get_config()
 
-# The first section of settings is the only one that is specific to the
-# lightweight environment. The remaining settings are standard configuration
-# for JupyterHub and DockerSpawner.
-
 # --------------------------------------------------------------------------
+
+# This first section contains the configuration that is specific to the
+# lightweight environment. The remaining sections contain standard
+# configuration for JupyterHub and DockerSpawner.
 
 ## Authenticate users with CILogon.
 c.JupyterHub.authenticator_class = "oauthenticator.CILogonOAuthenticator"
@@ -60,9 +60,6 @@ c.JupyterHub.db_url = f"postgresql://postgres:{pg_password}@{pg_host}/{pg_db}"
 ## Spawn single-user notebooks as Docker containers.
 c.JupyterHub.spawner_class = "dockerspawner.DockerSpawner"
 
-## Enable debug logging.
-c.DockerSpawner.debug = True
-
 ## Spawn containers from this image.
 c.DockerSpawner.container_image = os.environ["SINGLEUSER_IMAGE"]
 spawn_cmd = os.environ["SINGLEUSER_CMD"]
@@ -78,6 +75,9 @@ c.DockerSpawner.extra_host_config = {"network_mode": network_name}
 notebook_dir = os.environ["SINGLEUSER_VOLUME_PATH"]
 c.DockerSpawner.notebook_dir = notebook_dir
 c.DockerSpawner.volumes = {"jupyterhub-user-{username}": notebook_dir}
+
+## Enable debug logging.
+c.DockerSpawner.debug = True
 
 ## Remove containers once they are stopped.
 c.DockerSpawner.remove_containers = True

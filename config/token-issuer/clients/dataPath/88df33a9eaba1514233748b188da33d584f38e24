@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+<comment>OA4MP stream store</comment>
+<entry key="at_lifetime">-1</entry>
+<entry key="public_key">4b289478ab9e80f43a837620fd09e3484b10bb77</entry>
+<entry key="last_modified_ts">2022-08-31T17:45:06.662Z</entry>
+<entry key="rt_lifetime">129600000</entry>
+<entry key="cfg">{"tokens":{"access":{"audience":"ANY","qdl":{"load":"vfs#/scripts/scitokens/st.qdl","xmd":{"exec_phase":["pre_auth","post_token","post_refresh","post_exchange"]}},"type":"sci_token"}}}</entry>
+<entry key="home_url">https://localhost/</entry>
+<entry key="proxy_limited">false</entry>
+<entry key="extends_provisioners">false</entry>
+<entry key="sign_tokens">true</entry>
+<entry key="debug_on">false</entry>
+<entry key="client_id">oa4mp:/client_id/32163b076dd5194a29cc32849011c92f</entry>
+<entry key="issuer">https://token-issuer.localdomain/</entry>
+<entry key="strict_scopes">true</entry>
+<entry key="skip_server_scripts">false</entry>
+<entry key="public_client">true</entry>
+<entry key="callback_uri">["https://localhost/services/scitokens/tokens/lightweight-issuer/auth","https://localhost/services/scitokens/tokens/lightweight-issuer/callback"]</entry>
+<entry key="proxy_claims_list">[]</entry>
+<entry key="name">JupyterHub</entry>
+<entry key="ersatz_client">false</entry>
+<entry key="creation_ts">2022-08-31T17:45:06.579Z</entry>
+<entry key="df_lifetime">-1</entry>
+<entry key="scopes">["openid"]</entry>
+<entry key="email">nobody@localhost.localdomain</entry>
+<entry key="df_interval">-1</entry>
+</properties>
