@@ -13,6 +13,7 @@ FROM jupyterhub/jupyterhub-onbuild:$JUPYTERHUB_VERSION
 
 RUN apt-get update \
     && apt-get upgrade -y \
+    && apt-get install -y ca-certificates git \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* \
     #
@@ -20,7 +21,7 @@ RUN apt-get update \
          dockerspawner~=12.1 \
          oauthenticator~=14.2 \
          psycopg2-binary~=2.9 \
-         scitokens-jupyter==0.0.3
+         git+https://github.com/scitokens/scitokens-jupyter.git@0c9c47e
 
 ## Install TLS certificates.
 
@@ -28,4 +29,6 @@ ENV TLS_CRT /srv/jupyterhub/secrets/hub.crt
 ENV TLS_KEY /srv/jupyterhub/secrets/hub.key
 COPY secrets/tls.crt $TLS_CRT
 COPY secrets/tls.key $TLS_KEY
-RUN chmod -R u=rwX,go= /srv/jupyterhub/secrets/
+RUN chmod -R u=rwX,go= /srv/jupyterhub/secrets/ \
+    && cp /srv/jupyterhub/secrets/hub.crt /usr/local/share/ca-certificates/hub.crt \
+    && update-ca-certificates

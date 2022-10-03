@@ -35,15 +35,6 @@ docker:
 	docker network inspect $(DOCKER_NETWORK_NAME) >/dev/null 2>&1 \
 	  || docker network create $(DOCKER_NETWORK_NAME)
 
-	# Build the single-user/JupyterLab image directly because Docker
-	# Compose will not do so automatically (the containers are managed
-	# by JupyterHub and not Compose).
-
-	docker build -f Dockerfile.singleuser -t $(SINGLEUSER_IMAGE) \
-	  --build-arg JUPYTERHUB_VERSION=$(JUPYTERHUB_VERSION) \
-	  --build-arg SINGLEUSER_BASE_IMAGE=$(SINGLEUSER_BASE_IMAGE) \
-	  .
-
 clean-docker:
 
 	# Remove the Docker network and volumes created by this Makefile.
