@@ -1,0 +1,22 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/anhvu/Desktop/Developer/sciauth-lightweight-environment'
+mkdir -m u=rwx,go= -p secrets/
+test -e secrets/jupyterhub_svc_config.yaml || cp templates/jupyterhub_svc_config.yaml secrets/
+test -e secrets/user-config.json || cp templates/user-config.json secrets/
+# Create Docker volumes for persisting data between runs.
+docker volume create jupyterhub-db-data
+docker volume create jupyterhub-data
+docker volume create token-issuer-data
+# Create a Docker network for isolating the containers.
+docker network inspect jupyterhub >/dev/null 2>&1 \
+	  || docker network create jupyterhub
+mkdir -p secrets/
+chmod u=rwx,go= secrets/
+make \
+	  secrets/oauth.env \
+	  secrets/postgres.env \
+	  secrets/tls.crt \
+	  secrets/token-issuer.jwks
+docker compose build
+make: Leaving directory `/Users/anhvu/Desktop/Developer/sciauth-lightweight-environment'
+ 

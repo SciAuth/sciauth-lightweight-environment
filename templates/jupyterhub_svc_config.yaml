@@ -3,8 +3,8 @@ oauth2:
 - name: Lightweight Token Issuer
   id: lightweight-issuer
 
-  client_id: oa4mp:/client_id/32163b076dd5194a29cc32849011c92f
-  client_secret: ""
+  client_id: oa4mp:/client_id/a59332fcb9186bf2edbebbf4ab12ce0
+  client_secret: tto_pYps3Fk4pYNVR_zrhiL7NY5RogTQ
 
   device_auth_url: https://token-issuer:8443/scitokens-server/device_authorization
   token_url: https://token-issuer:8443/scitokens-server/token
