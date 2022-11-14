@@ -1,4 +1,4 @@
 [req]
 distinguished_name=req
 [san]
-subjectAltName=DNS:localhost,DNS:localhost.localdomain,DNS:htcondor,DNS:htcondor.localdomain,DNS:token-issuer,DNS:token-issuer.localdomain
+subjectAltName=DNS:localhost,DNS:localhost.localdomain,DNS:htcondor,DNS:htcondor.localdomain,DNS:jupyterhub,DNS:jupyterhub.localdomain,DNS:token-issuer,DNS:token-issuer.localdomain

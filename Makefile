@@ -35,12 +35,18 @@ docker:
 	docker network inspect $(DOCKER_NETWORK_NAME) >/dev/null 2>&1 \
 	  || docker network create $(DOCKER_NETWORK_NAME)
 
+	# Create images that are not in the Compose configuration.
+
+	docker build -f Dockerfile.singleuser -t $(SINGLEUSER_IMAGE) \
+	  --build-arg SINGLEUSER_BASE_IMAGE=$(SINGLEUSER_BASE_IMAGE) \
+	  .
+
 clean-docker:
 
 	# Remove the Docker network and volumes created by this Makefile.
-	# User data volumes will not be removed, nor will any images created
-	# by this Makefile or Docker Compose setup.
+	# User data volumes will not be removed.
 
+	-docker image rm $(HTCONDOR_IMAGE) $(JUPYTERHUB_IMAGE) $(SCITOKENS_IMAGE) $(SINGLEUSER_IMAGE)
 	-docker network rm $(DOCKER_NETWORK_NAME)
 	-docker volume rm $(DB_VOLUME_NAME) $(HUB_VOLUME_NAME) $(TOKEN_ISSUER_VOLUME_NAME)
 

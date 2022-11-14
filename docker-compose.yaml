@@ -54,7 +54,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_HOST: hub-db
 
-      SINGLEUSER_IMAGE: ${SINGLEUSER_BASE_IMAGE}
+      SINGLEUSER_IMAGE: ${SINGLEUSER_IMAGE}
       SINGLEUSER_CMD: ${SINGLEUSER_CMD}
       SINGLEUSER_VOLUME_PATH: ${SINGLEUSER_VOLUME_PATH}
 
@@ -99,6 +99,8 @@ services:
       target: /opt/tomcat/conf/hostcert.pem
     - source: tls-key
       target: /opt/tomcat/conf/hostkey.pem
+    - source: token-issuer-server-config-template
+      target: /opt/scitokens-server/etc/server-config.xml.tmpl
     - source: token-issuer-user-config
       target: /opt/scitokens-server/var/qdl/user-config.txt
 
@@ -118,12 +120,16 @@ services:
     - 9618:9618
 
     secrets:
-    - source: htcondor-end-to-end-env
-      target: /etc/condor/config.d/90-end-to-end-env
     - source: htcondor-minicondor
       target: /etc/condor/config.d/00-minicondor
+    - source: htcondor-end-to-end-env
+      target: /etc/condor/config.d/90-end-to-end-env
     - source: htcondor-mapfile
       target: /etc/condor/condor_mapfile
+    - source: tls-crt
+      target: /certs/tls.crt
+    - source: tls-key
+      target: /certs/tls.key
 
 #---------------------------------------------------------------------------
 
@@ -145,6 +151,9 @@ secrets:
 
   token-issuer-keys:
     file: secrets/token-issuer.jwks
+
+  token-issuer-server-config-template:
+    file: config/token-issuer/server-config.xml.tmpl
 
   token-issuer-user-config:
     file: secrets/user-config.json
