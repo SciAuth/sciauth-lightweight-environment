@@ -8,6 +8,28 @@ version: "3.0"
 #---------------------------------------------------------------------------
 
 services:
+  restdemo:
+    image: vuanh2103/cashman-flask
+    container_name: restdemo
+    restart: always
+
+    build:
+      context: .
+      dockerfile: Dockerfile.restdemo
+
+    environment:
+      FLASK_APP: wsgi.py
+      AUTH0_DOMAIN: dev-7jgsf20u.us.auth0.com
+      API_IDENTIFIER: "https://cashman/api"
+
+    secrets:
+      - source: tls-crt
+        target: /certs/tls.crt
+      - source: tls-key
+        target: /certs/tls.key
+
+    ports:
+      - 3001:3001
 
   hub-db:
     image: postgres:14.2
@@ -15,20 +37,20 @@ services:
     restart: always
 
     env_file:
-    - secrets/postgres.env
+      - secrets/postgres.env
 
     environment:
       PGDATA: ${DB_VOLUME_PATH}
       POSTGRES_DB: ${POSTGRES_DB}
 
     volumes:
-    - db:${DB_VOLUME_PATH}
+      - db:${DB_VOLUME_PATH}
 
   hub:
     depends_on:
-    - htcondor
-    - hub-db
-    - token-issuer
+      - htcondor
+      - hub-db
+      - token-issuer
 
     build:
       context: .
@@ -43,8 +65,8 @@ services:
     command: jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
 
     env_file:
-    - secrets/oauth.env
-    - secrets/postgres.env
+      - secrets/oauth.env
+      - secrets/postgres.env
 
     environment:
       DOCKER_NETWORK_NAME: ${DOCKER_NETWORK_NAME}
@@ -61,18 +83,18 @@ services:
       SCITOKENS_SERVICE_PORT: ${SCITOKENS_SERVICE_PORT}
 
     links:
-    - hub-db
+      - hub-db
 
     ports:
-    - 443:443
+      - 443:443
 
     secrets:
-    - source: scitokens-service-config
-      target: /etc/scitokens/jupyterhub_service.yaml
+      - source: scitokens-service-config
+        target: /etc/scitokens/jupyterhub_service.yaml
 
     volumes:
-    - hub:${HUB_VOLUME_PATH}
-    - /var/run/docker.sock:/var/run/docker.sock:rw
+      - hub:${HUB_VOLUME_PATH}
+      - /var/run/docker.sock:/var/run/docker.sock:rw
 
   token-issuer:
     image: hub.opensciencegrid.org/sciauth/lightweight-issuer:v1.0.2
@@ -80,30 +102,30 @@ services:
     restart: always
 
     env_file:
-    - secrets/oauth.env
+      - secrets/oauth.env
 
     environment:
       HOSTNAME: localhost:8443
 
     ports:
-    - 8443:8443
+      - 8443:8443
 
     secrets:
-    - source: token-issuer-client
-      target: ${TOKEN_ISSUER_VOLUME_PATH}/clients/dataPath/88df33a9eaba1514233748b188da33d584f38e24
-    - source: token-issuer-client-approval
-      target: ${TOKEN_ISSUER_VOLUME_PATH}/clientApprovals/dataPath/88df33a9eaba1514233748b188da33d584f38e24
-    - source: token-issuer-keys
-      target: /opt/scitokens-server/etc/keys.jwk
-    - source: tls-crt
-      target: /opt/tomcat/conf/hostcert.pem
-    - source: tls-key
-      target: /opt/tomcat/conf/hostkey.pem
-    - source: token-issuer-user-config
-      target: /opt/scitokens-server/var/qdl/user-config.txt
+      - source: token-issuer-client
+        target: ${TOKEN_ISSUER_VOLUME_PATH}/clients/dataPath/88df33a9eaba1514233748b188da33d584f38e24
+      - source: token-issuer-client-approval
+        target: ${TOKEN_ISSUER_VOLUME_PATH}/clientApprovals/dataPath/88df33a9eaba1514233748b188da33d584f38e24
+      - source: token-issuer-keys
+        target: /opt/scitokens-server/etc/keys.jwk
+      - source: tls-crt
+        target: /opt/tomcat/conf/hostcert.pem
+      - source: tls-key
+        target: /opt/tomcat/conf/hostkey.pem
+      - source: token-issuer-user-config
+        target: /opt/scitokens-server/var/qdl/user-config.txt
 
     volumes:
-    - token-issuer:${TOKEN_ISSUER_VOLUME_PATH}
+      - token-issuer:${TOKEN_ISSUER_VOLUME_PATH}
 
   htcondor:
     build:
@@ -115,22 +137,21 @@ services:
     restart: always
 
     ports:
-    - 9618:9618
+      - 9618:9618
 
     secrets:
-    - source: htcondor-end-to-end-env
-      target: /etc/condor/config.d/90-end-to-end-env
-    - source: htcondor-minicondor
-      target: /etc/condor/config.d/00-minicondor
-    - source: htcondor-mapfile
-      target: /etc/condor/condor_mapfile
+      - source: htcondor-end-to-end-env
+        target: /etc/condor/config.d/90-end-to-end-env
+      - source: htcondor-minicondor
+        target: /etc/condor/config.d/00-minicondor
+      - source: htcondor-mapfile
+        target: /etc/condor/condor_mapfile
 
 #---------------------------------------------------------------------------
 
 ## These "secrets" are used to inject files into the containers.
 
 secrets:
-
   htcondor-minicondor:
     file: config/htcondor/00-minicondor
 

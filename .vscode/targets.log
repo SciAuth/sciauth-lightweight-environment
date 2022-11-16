@@ -7,7 +7,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 
 # This program built for i386-apple-darwin11.3.0
 
-# Make data base, printed on Thu Nov  3 16:26:30 2022
+# Make data base, printed on Wed Nov  9 23:39:05 2022
 
 # Variables
 
@@ -54,7 +54,7 @@ DB_VOLUME_PATH = /var/lib/postgresql/data
 # makefile (from `.env', line 29)
 SINGLEUSER_CMD = jupyter-labhub
 # environment
-LaunchInstanceID = 508712A7-7A03-41B7-AE0E-E28BB94D5C98
+LaunchInstanceID = 26A20610-F566-4CCB-8580-3EE02CB7845A
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # default
@@ -64,7 +64,7 @@ SINGLEUSER_VOLUME_PATH = /home/jovyan/work
 # makefile (from `.env', line 52)
 HTCONDOR_IMAGE = htcondor:sciauth-env
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.faXhTuKl2a/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.SiGXT7WVtp/Listeners
 # automatic
 %F = $(notdir $%)
 # makefile (from `.env', line 20)
@@ -88,7 +88,7 @@ VSCODE_CODE_CACHE_PATH = /Users/anhvu/Library/Application Support/Code/CachedDat
 # environment
 LOGNAME = anhvu
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
 # environment
 ZSH = /Users/anhvu/.oh-my-zsh
 # environment
@@ -166,7 +166,7 @@ LC_ALL = C
 # makefile (from `.env', line 25)
 JUPYTERHUB_VERSION = 1.3.0
 # environment
-SECURITYSESSIONID = 186a6
+SECURITYSESSIONID = 186a4
 # automatic
 ^F = $(notdir $^)
 # default
@@ -180,7 +180,7 @@ LANG = C
 # makefile (from `.env', line 28)
 SINGLEUSER_BASE_IMAGE = hub.opensciencegrid.org/osg-jupyter/htc-minimal-notebook:1.0.0
 # environment
-VSCODE_PID = 465
+VSCODE_PID = 617
 # variable set hash-table stats:
 # Load=85/1024=8%, Rehash=0, Collisions=5/112=4%
 
@@ -411,6 +411,6 @@ clean-docker:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4082 / max = 4082 / min = 4082 / avg = 4082
 
-# Finished Make data base on Thu Nov  3 16:26:30 2022
+# Finished Make data base on Wed Nov  9 23:39:05 2022
 
  
