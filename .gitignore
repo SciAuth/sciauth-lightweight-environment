@@ -16,3 +16,6 @@
 
 ## Sensitive configuration data.
 /secrets
+
+## Config files
+.vscode

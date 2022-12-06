@@ -6,8 +6,9 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
+ 
 
-# Make data base, printed on Wed Nov  9 23:39:05 2022
+# Make data base, printed on Tue Dec  6 10:47:35 2022
 
 # Variables
 
@@ -54,7 +55,7 @@ DB_VOLUME_PATH = /var/lib/postgresql/data
 # makefile (from `.env', line 29)
 SINGLEUSER_CMD = jupyter-labhub
 # environment
-LaunchInstanceID = 26A20610-F566-4CCB-8580-3EE02CB7845A
+LaunchInstanceID = 72A7B74F-1AE8-4034-8D77-DB6B663EC803
 # environment
 ELECTRON_RUN_AS_NODE = 1
 # default
@@ -64,7 +65,7 @@ SINGLEUSER_VOLUME_PATH = /home/jovyan/work
 # makefile (from `.env', line 52)
 HTCONDOR_IMAGE = htcondor:sciauth-env
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.SiGXT7WVtp/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.rtPjp6mwCW/Listeners
 # automatic
 %F = $(notdir $%)
 # makefile (from `.env', line 20)
@@ -88,7 +89,7 @@ VSCODE_CODE_CACHE_PATH = /Users/anhvu/Library/Application Support/Code/CachedDat
 # environment
 LOGNAME = anhvu
 # environment
-APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = true
+APPLICATION_INSIGHTS_NO_DIAGNOSTIC_CHANNEL = 1
 # environment
 ZSH = /Users/anhvu/.oh-my-zsh
 # environment
@@ -166,7 +167,7 @@ LC_ALL = C
 # makefile (from `.env', line 25)
 JUPYTERHUB_VERSION = 1.3.0
 # environment
-SECURITYSESSIONID = 186a4
+SECURITYSESSIONID = 186a7
 # automatic
 ^F = $(notdir $^)
 # default
@@ -180,7 +181,7 @@ LANG = C
 # makefile (from `.env', line 28)
 SINGLEUSER_BASE_IMAGE = hub.opensciencegrid.org/osg-jupyter/htc-minimal-notebook:1.0.0
 # environment
-VSCODE_PID = 617
+VSCODE_PID = 460
 # variable set hash-table stats:
 # Load=85/1024=8%, Rehash=0, Collisions=5/112=4%
 
@@ -307,7 +308,6 @@ build: config docker secrets
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
- 
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
@@ -319,6 +319,7 @@ build: config docker secrets
 # Not a target:
 .env:
 #  Implicit rule search has been done.
+ 
 #  Last modified 2022-10-10 20:00:16
 #  File has been updated.
 #  Successfully updated.
@@ -411,6 +412,6 @@ clean-docker:
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4082 / max = 4082 / min = 4082 / avg = 4082
 
-# Finished Make data base on Wed Nov  9 23:39:05 2022
+# Finished Make data base on Tue Dec  6 10:47:35 2022
 
  
