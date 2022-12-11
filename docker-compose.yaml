@@ -9,7 +9,7 @@ version: "3.0"
 
 services:
   restdemo:
-    image: vuanh2103/cashman-flask
+    image: vuanh2103/cashman-flask:latest
     container_name: restdemo
     restart: always
 
