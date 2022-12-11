@@ -1,1 +1,0 @@
-{"buildTargets":["all","build","clean","clean-docker","config","docker","secrets","secrets/oauth.env","secrets/postgres.env","secrets/tls.crt","secrets/token-issuer.jwks"],"launchTargets":[],"customConfigurationProvider":{"workspaceBrowse":{"browsePath":[],"compilerArgs":[]},"fileIndex":[]}}

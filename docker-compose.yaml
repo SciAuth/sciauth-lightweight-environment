@@ -13,10 +13,6 @@ services:
     container_name: restdemo
     restart: always
 
-    build:
-      context: .
-      dockerfile: Dockerfile.restdemo
-
     environment:
       FLASK_APP: wsgi.py
       AUTH0_DOMAIN: dev-7jgsf20u.us.auth0.com
@@ -29,7 +25,7 @@ services:
         target: /certs/tls.key
 
     ports:
-      - 3001:3001
+      - 3001:8443
 
   hub-db:
     image: postgres:14.2
