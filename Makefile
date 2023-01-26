@@ -76,7 +76,7 @@ secrets/tls.crt:
 	# or trust one such certificate rather than many.
 
 	openssl req -x509 \
-	  -subj "/CN=localhost" \
+	  -subj "//CN=localhost" \
 	  -newkey rsa:4096 \
 	  -out secrets/tls.crt \
 	  -keyout secrets/tls.key \
