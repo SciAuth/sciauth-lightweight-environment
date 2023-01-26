@@ -29,7 +29,9 @@ use ROLE: Execute
 
 # NETWORK_INTERFACE = 127.0.0.1
 # BIND_ALL_INTERFACES = False
-CONDOR_HOST = 127.0.0.1
+NETWORK_INTERFACE = *
+BIND_ALL_INTERFACES = True
+CONDOR_HOST = htcondor.localdomain
 
 SCHEDD_NAME = schedd@htcondor.localdomain
 

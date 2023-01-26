@@ -1,0 +1,29 @@
+# Copyright (c) Jupyter Development Team.
+# Distributed under the terms of the Modified BSD License.
+# Modified by Brian Aydemir <baydemir@morgridge.org>.
+
+ARG SINGLEUSER_BASE_IMAGE
+FROM $SINGLEUSER_BASE_IMAGE
+
+## Update the base install and add required packages.
+
+USER root
+
+RUN apt-get update \
+ && apt-get upgrade -y \
+ && apt-get install -y curl jq \
+ && apt-get clean -y \
+ && rm -rf /var/lib/apt/lists/*
+
+COPY config/htcondor/99-notebook /etc/condor/config.d
+
+# We didn't create a CA certificate, so we have to munge the system bundle
+# by hand.
+
+COPY secrets/tls.crt /certs/tls.crt
+COPY secrets/tls.key /certs/tls.key
+
+RUN printf '\n\n# SciAuth Lightweight Environment\n' >> /etc/ssl/certs/ca-certificates.crt \
+    && cat /certs/tls.crt >> /etc/ssl/certs/ca-certificates.crt
+
+USER jovyan

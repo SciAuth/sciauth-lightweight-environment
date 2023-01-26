@@ -1,5 +1,12 @@
 FROM htcondor/mini:9.10-el7
 
-COPY secrets/tls.crt /etc/pki/ca-trust/source/anchors/lightweight-environment.crt
+# We didn't create a CA certificate, so we have to munge the system bundle
+# by hand.
 
-RUN update-ca-trust extract
+COPY secrets/tls.crt /certs/tls.crt
+COPY secrets/tls.key /certs/tls.key
+
+RUN mkdir /boostrap
+
+RUN printf '\n\n# SciAuth Lightweight Environment\n' >> /etc/pki/tls/certs/ca-bundle.crt \
+    && cat /certs/tls.crt >> /etc/pki/tls/certs/ca-bundle.crt

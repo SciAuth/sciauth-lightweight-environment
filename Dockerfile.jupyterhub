@@ -21,7 +21,7 @@ RUN apt-get update \
          dockerspawner~=12.1 \
          oauthenticator~=14.2 \
          psycopg2-binary~=2.9 \
-         git+https://github.com/scitokens/scitokens-jupyter.git@0c9c47e
+         git+https://github.com/scitokens/scitokens-jupyter.git@badd8c86ee071d6644c3d6c0164a748e899f21ba
 
 ## Install TLS certificates.
 
@@ -29,6 +29,9 @@ ENV TLS_CRT /srv/jupyterhub/secrets/hub.crt
 ENV TLS_KEY /srv/jupyterhub/secrets/hub.key
 COPY secrets/tls.crt $TLS_CRT
 COPY secrets/tls.key $TLS_KEY
-RUN chmod -R u=rwX,go= /srv/jupyterhub/secrets/ \
-    && cp /srv/jupyterhub/secrets/hub.crt /usr/local/share/ca-certificates/hub.crt \
-    && update-ca-certificates
+
+# We didn't create a CA certificate, so we have to munge the system bundle
+# by hand.
+
+RUN printf '\n\n# SciAuth Lightweight Environment\n' >> /etc/ssl/certs/ca-certificates.crt \
+    && cat $TLS_CRT >> /etc/ssl/certs/ca-certificates.crt

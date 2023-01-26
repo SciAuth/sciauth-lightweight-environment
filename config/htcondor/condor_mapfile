@@ -1,1 +1,1 @@
-SCITOKENS (.*) submituser
+SCITOKENS ^https://token-issuer.localdomain:8443/scitokens-server,.*$ submituser
