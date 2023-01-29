@@ -35,7 +35,7 @@ docker:
 	docker network inspect $(DOCKER_NETWORK_NAME) >/dev/null 2>&1 \
 	  || docker network create $(DOCKER_NETWORK_NAME)
 
-	# Create images that are not in the Compose configuration.
+	# # Create images that are not in the Compose configuration.
 
 	docker build -f Dockerfile.singleuser -t $(SINGLEUSER_IMAGE) \
 	  --build-arg SINGLEUSER_BASE_IMAGE=$(SINGLEUSER_BASE_IMAGE) \
