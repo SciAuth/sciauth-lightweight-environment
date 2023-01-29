@@ -1,8 +1,3 @@
----
-title: SciAuth Lightweight Environment Documentation
-author: Anh Vu, Quang Le
----
-
 # SciAuth Lightweight Environment
 
 This repository provides an end-to-end software environment that facilitates the experimentation with [SciTokens](https://scitokens.org/) for capability-based authorization in scientific computing. It is a product of the [SciAuth](https://sciauth.org/) project, which encourages the adoption of the SciTokens model through community engagement, support for coordinated adoption of community standards, assistance with software integration, security analysis and threat modeling, training, and workforce development.
