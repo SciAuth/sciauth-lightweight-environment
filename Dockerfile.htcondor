@@ -3,10 +3,8 @@ FROM htcondor/mini:9.10-el7
 # We didn't create a CA certificate, so we have to munge the system bundle
 # by hand.
 
-COPY secrets/tls.crt /certs/tls.crt
-COPY secrets/tls.key /certs/tls.key
+COPY secrets/tls.crt   /certs/
+COPY secrets/tls.key   /certs/
+COPY util/add_cert.py  /certs/
 
-RUN mkdir /boostrap
-
-RUN printf '\n\n# SciAuth Lightweight Environment\n' >> /etc/pki/tls/certs/ca-bundle.crt \
-    && cat /certs/tls.crt >> /etc/pki/tls/certs/ca-bundle.crt
+RUN python3 /certs/add_cert.py /certs/tls.crt /etc/pki/tls/certs/ca-bundle.crt

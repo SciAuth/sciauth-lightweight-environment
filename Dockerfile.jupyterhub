@@ -27,11 +27,13 @@ RUN apt-get update \
 
 ENV TLS_CRT /srv/jupyterhub/secrets/hub.crt
 ENV TLS_KEY /srv/jupyterhub/secrets/hub.key
+
 COPY secrets/tls.crt $TLS_CRT
 COPY secrets/tls.key $TLS_KEY
 
 # We didn't create a CA certificate, so we have to munge the system bundle
 # by hand.
 
-RUN printf '\n\n# SciAuth Lightweight Environment\n' >> /etc/ssl/certs/ca-certificates.crt \
-    && cat $TLS_CRT >> /etc/ssl/certs/ca-certificates.crt
+COPY util/add_cert.py /build/add_cert.py
+
+RUN python3 /build/add_cert.py $TLS_CRT /etc/ssl/certs/ca-certificates.crt

@@ -20,10 +20,10 @@ COPY config/htcondor/99-notebook /etc/condor/config.d
 # We didn't create a CA certificate, so we have to munge the system bundle
 # by hand.
 
-COPY secrets/tls.crt /certs/tls.crt
-COPY secrets/tls.key /certs/tls.key
+COPY secrets/tls.crt   /certs/
+COPY secrets/tls.key   /certs/
+COPY util/add_cert.py  /certs/
 
-RUN printf '\n\n# SciAuth Lightweight Environment\n' >> /etc/ssl/certs/ca-certificates.crt \
-    && cat /certs/tls.crt >> /etc/ssl/certs/ca-certificates.crt
+RUN python3 /certs/add_cert.py /certs/tls.crt /etc/ssl/certs/ca-certificates.crt
 
 USER $NB_UID:$NB_GID
