@@ -9,3 +9,6 @@
 
 ## Sensitive configuration data.
 /secrets/
+
+## VS Code's workspace configuration and data.
+/.vscode/

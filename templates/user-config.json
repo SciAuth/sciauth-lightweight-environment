@@ -17,6 +17,12 @@
     ],
     "audience": "my_rabbit_server"
   },
+  "http://cilogon.org/serverE/users/42403": {
+    "eduPersonEntitlement": [
+      "read:/properties write:/properties update:/properties delete:/properties/linh"
+    ],
+    "audience": "https://token-issuer.localdomain"
+  },
   "default_claim": {
     "comment": [
       "This is the default claim returned by the handler **if** you specify use_default",
