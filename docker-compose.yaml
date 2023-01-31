@@ -8,45 +8,12 @@ version: "3.0"
 #---------------------------------------------------------------------------
 
 services:
-  restdemo:
-    image: vuanh2103/cashman-flask:latest
-    container_name: restdemo
-    restart: always
-
-    environment:
-      FLASK_APP: wsgi.py
-      AUTH0_DOMAIN: dev-7jgsf20u.us.auth0.com
-      API_IDENTIFIER: "https://cashman/api"
-
-    secrets:
-      - source: tls-crt
-        target: /certs/tls.crt
-      - source: tls-key
-        target: /certs/tls.key
-
-    ports:
-      - 3001:8443
-
-  hub-db:
-    image: postgres:14.2
-    container_name: jupyterhub-db
-    restart: always
-
-    env_file:
-      - secrets/postgres.env
-
-    environment:
-      PGDATA: ${DB_VOLUME_PATH}
-      POSTGRES_DB: ${POSTGRES_DB}
-
-    volumes:
-      - db:${DB_VOLUME_PATH}
 
   hub:
     depends_on:
-      - htcondor
-      - hub-db
-      - token-issuer
+    - htcondor
+    - hub-db
+    - token-issuer
 
     build:
       context: .
@@ -61,8 +28,8 @@ services:
     command: jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
 
     env_file:
-      - secrets/oauth.env
-      - secrets/postgres.env
+    - secrets/oauth.env
+    - secrets/postgres.env
 
     environment:
       DOCKER_NETWORK_NAME: ${DOCKER_NETWORK_NAME}
@@ -79,18 +46,33 @@ services:
       SCITOKENS_SERVICE_PORT: ${SCITOKENS_SERVICE_PORT}
 
     links:
-      - hub-db
+    - hub-db
 
     ports:
-      - 443:443
+    - 443:443
 
     secrets:
-      - source: scitokens-service-config
-        target: /etc/scitokens/jupyterhub_service.yaml
+    - source: scitokens-service-config
+      target: /etc/scitokens/jupyterhub_service.yaml
 
     volumes:
-      - hub:${HUB_VOLUME_PATH}
-      - /var/run/docker.sock:/var/run/docker.sock:rw
+    - hub:${HUB_VOLUME_PATH}
+    - /var/run/docker.sock:/var/run/docker.sock:rw
+
+  hub-db:
+    image: postgres:14.2
+    container_name: jupyterhub-db
+    restart: always
+
+    env_file:
+    - secrets/postgres.env
+
+    environment:
+      PGDATA: ${DB_VOLUME_PATH}
+      POSTGRES_DB: ${POSTGRES_DB}
+
+    volumes:
+    - db:${DB_VOLUME_PATH}
 
   token-issuer:
     image: hub.opensciencegrid.org/sciauth/lightweight-issuer:v1.0.2
@@ -98,13 +80,13 @@ services:
     restart: always
 
     env_file:
-      - secrets/oauth.env
+    - secrets/oauth.env
 
     environment:
       HOSTNAME: localhost:8443
 
     ports:
-      - 8443:8443
+    - 8443:8443
 
     secrets:
     - source: token-issuer-client
@@ -123,7 +105,7 @@ services:
       target: /opt/scitokens-server/var/qdl/user-config.txt
 
     volumes:
-      - token-issuer:${TOKEN_ISSUER_VOLUME_PATH}
+    - token-issuer:${TOKEN_ISSUER_VOLUME_PATH}
 
   htcondor:
     build:
@@ -135,7 +117,7 @@ services:
     restart: always
 
     ports:
-      - 9618:9618
+    - 9618:9618
 
     secrets:
     - source: htcondor-minicondor
@@ -148,6 +130,26 @@ services:
       target: /certs/tls.crt
     - source: tls-key
       target: /certs/tls.key
+
+  restdemo:
+    image: vuanh2103/cashman-flask:latest
+    container_name: restdemo
+    restart: always
+
+    environment:
+      FLASK_APP: wsgi.py
+      AUTH0_DOMAIN: dev-7jgsf20u.us.auth0.com
+      API_IDENTIFIER: https://cashman/api
+
+    secrets:
+    - source: tls-crt
+      target: /certs/tls.crt
+    - source: tls-key
+      target: /certs/tls.key
+
+    ports:
+    - 3001:8443
+
 
 #---------------------------------------------------------------------------
 
