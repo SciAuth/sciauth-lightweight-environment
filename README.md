@@ -4,6 +4,8 @@ This repository provides an end-to-end software environment that facilitates the
 
 The end-to-end software environment consists of a set interconnected
 containers orchestrated with [Docker Compose](https://docs.docker.com/compose/).
+It was originally derived from
+[jupyterhub-deploy-docker](https://github.com/jupyterhub/jupyterhub-deploy-docker).
 
 ## Requirements
 
