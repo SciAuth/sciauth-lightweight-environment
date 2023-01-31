@@ -1,2 +1,5 @@
+## Temporary files created by vim.
+**/*.swp
+
 ## Configuration and cache directories for various tools.
-/.*
+.*

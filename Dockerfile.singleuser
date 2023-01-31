@@ -26,4 +26,4 @@ COPY secrets/tls.key /certs/tls.key
 RUN printf '\n\n# SciAuth Lightweight Environment\n' >> /etc/ssl/certs/ca-certificates.crt \
     && cat /certs/tls.crt >> /etc/ssl/certs/ca-certificates.crt
 
-USER jovyan
+USER $NB_UID:$NB_GID

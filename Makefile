@@ -22,7 +22,7 @@ config:
 
 #---------------------------------------------------------------------------
 
-docker:
+docker: secrets
 
 	# Create Docker volumes for persisting data between runs.
 
