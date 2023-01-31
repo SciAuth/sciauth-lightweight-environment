@@ -43,7 +43,13 @@ name = "sciauth_lightweight_environment"
 version = "0.0.1"
 description = "Docker Compose environment for experimenting with SciTokens"
 license = "Apache-2.0"
-authors = ["Brian Aydemir <baydemir@morgridge.org>"]
+authors = [
+    "Brian Aydemir <baydemir@morgridge.org>",
+    "Jim Basney <jbasney@illinois.edu>",
+    "Anh Vu <vuanh@grinnell.edu>",
+    "Quang Le <lequang@grinnell.edu>",
+]
+maintainers = ["Brian Aydemir <baydemir@morgridge.org>"]
 repository = "https://github.com/SciAuth/sciauth-lightweight-environment"
 packages = []
 
