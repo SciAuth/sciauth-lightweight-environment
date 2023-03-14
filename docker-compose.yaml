@@ -5,8 +5,6 @@
 
 version: "3.0"
 
-#---------------------------------------------------------------------------
-
 services:
 
   hub:
@@ -25,7 +23,7 @@ services:
     container_name: jupyterhub
     restart: always
 
-    command: jupyterhub -f /srv/jupyterhub/jupyterhub_config.py
+    command: jupyterhub -f /srv/jupyterhub/config.py
 
     env_file:
     - secrets/oauth.env
@@ -52,12 +50,15 @@ services:
     - 443:443
 
     secrets:
+    - source: jupyterhub-config
+      target: /srv/jupyterhub/config.py
     - source: scitokens-service-config
       target: /etc/scitokens/jupyterhub_service.yaml
 
     volumes:
     - hub:${HUB_VOLUME_PATH}
     - /var/run/docker.sock:/var/run/docker.sock:rw
+    - ./config/jupyterhub/config.py::ro
 
   hub-db:
     image: postgres:14.2
@@ -83,6 +84,9 @@ services:
     - secrets/oauth.env
 
     environment:
+      # Normally, the token issuer would be on the same network as the users
+      # requesting tokens and resource providers validating tokens.
+
       HOSTNAME: localhost:8443
 
     ports:
@@ -116,12 +120,12 @@ services:
     container_name: htcondor.localdomain
     restart: always
 
+    hostname: htcondor.localdomain
+
     ports:
     - 9618:9618
 
     secrets:
-    - source: htcondor-minicondor
-      target: /etc/condor/config.d/00-minicondor
     - source: htcondor-end-to-end-env
       target: /etc/condor/config.d/90-end-to-end-env
     - source: htcondor-mapfile
@@ -151,20 +155,17 @@ services:
     - 3001:8443
 
 
-#---------------------------------------------------------------------------
-
-## These "secrets" are used to inject files into the containers.
-
 secrets:
-
-  htcondor-minicondor:
-    file: config/htcondor/00-minicondor
+  # These "secrets" are used to inject files into the containers.
 
   htcondor-end-to-end-env:
     file: config/htcondor/90-end-to-end-env
 
   htcondor-mapfile:
     file: config/htcondor/condor_mapfile
+
+  jupyterhub-config:
+    file: config/jupyterhub/config.py
 
   scitokens-service-config:
     file: secrets/jupyterhub_svc_config.yaml
@@ -184,14 +185,12 @@ secrets:
   token-issuer-client-approval:
     file: config/token-issuer/clientApprovals/dataPath/88df33a9eaba1514233748b188da33d584f38e24
 
-  ## Shared TLS certificate and key.
+  # Shared TLS certificate and key.
 
   tls-crt:
     file: secrets/tls.crt
   tls-key:
     file: secrets/tls.key
-
-## Create the networks and volumes below via `make build`.
 
 networks:
   default:

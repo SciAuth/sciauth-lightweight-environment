@@ -4,23 +4,38 @@
 
 include .env
 
-.PHONY: all build clean clean-docker config docker secrets
+.PHONY: all build clean config docker secrets
 
 all: build
 
 build: config docker secrets
-	docker compose build
 
-clean: clean-docker
+	# Build services and the images that they depend on.
+
+	docker compose build --pull
+
+clean:
+
+	# Remove Docker networks and volumes created by this Makefile.
+	# Retain user data volumes.
+	# Retain user configuration and secrets.
+
+	-docker image rm $(HTCONDOR_IMAGE) $(JUPYTERHUB_IMAGE) $(SCITOKENS_IMAGE) $(SINGLEUSER_IMAGE)
+	-docker network rm $(DOCKER_NETWORK_NAME)
+	-docker volume rm $(DB_VOLUME_NAME) $(HUB_VOLUME_NAME) $(TOKEN_ISSUER_VOLUME_NAME)
 
 #---------------------------------------------------------------------------
 
-config:
-	mkdir -m u=rwx,go= -p secrets/
-	test -e secrets/jupyterhub_svc_config.yaml || cp templates/jupyterhub_svc_config.yaml secrets/
-	test -e secrets/user-config.json || cp templates/user-config.json secrets/
+config: secrets
+	make \
+	  secrets/jupyterhub_svc_config.yaml \
+	  secrets/user-config.json
 
-#---------------------------------------------------------------------------
+secrets/jupyterhub_svc_config.yaml:
+	cp templates/jupyterhub_svc_config.yaml secrets/
+
+secrets/user-config.json:
+	cp templates/user-config.json secrets/
 
 docker: secrets
 
@@ -35,22 +50,12 @@ docker: secrets
 	docker network inspect $(DOCKER_NETWORK_NAME) >/dev/null 2>&1 \
 	  || docker network create $(DOCKER_NETWORK_NAME)
 
-	# Create images that are not in the Compose configuration.
+	# Build images that are not in the Docker Compose setup.
 
 	docker build -f Dockerfile.singleuser -t $(SINGLEUSER_IMAGE) \
+	  --pull \
 	  --build-arg SINGLEUSER_BASE_IMAGE=$(SINGLEUSER_BASE_IMAGE) \
 	  .
-
-clean-docker:
-
-	# Remove the Docker network and volumes created by this Makefile.
-	# User data volumes will not be removed.
-
-	-docker image rm $(HTCONDOR_IMAGE) $(JUPYTERHUB_IMAGE) $(SCITOKENS_IMAGE) $(SINGLEUSER_IMAGE)
-	-docker network rm $(DOCKER_NETWORK_NAME)
-	-docker volume rm $(DB_VOLUME_NAME) $(HUB_VOLUME_NAME) $(TOKEN_ISSUER_VOLUME_NAME)
-
-#---------------------------------------------------------------------------
 
 secrets:
 	mkdir -p secrets/
@@ -78,7 +83,7 @@ secrets/postgres.env:
 secrets/tls.crt:
 
 	# Create a single self-signed certificate for all of the hosts
-	# in this Docker Compose setup. It is somewhat simpler to accept
+	# in the Docker Compose setup. It is somewhat simpler to accept
 	# or trust one such certificate rather than many.
 
 	openssl req -x509 \
@@ -98,11 +103,10 @@ secrets/token-issuer.jwks:
 	# lightweight token issuer.
 
 	docker build -f Dockerfile.scitokens -t $(SCITOKENS_IMAGE) \
-	  --no-cache \
 	  --pull \
 	  .
 
-	docker run -it --rm $(SCITOKENS_IMAGE) \
+	docker run --rm $(SCITOKENS_IMAGE) \
 	  python3 -m scitokens.tools.admin_create_key \
 	    --create-keys \
 	    --jwks-private \

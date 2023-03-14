@@ -2,38 +2,31 @@
 # Distributed under the terms of the Modified BSD License.
 # Modified by Brian Aydemir <baydemir@morgridge.org>.
 
-# NOTE: `jupyterhub_config.py` must be present at the root of the build
-# context. The `onbuild` image below automatically copies this file into
-# the image being constructed.
-
 ARG JUPYTERHUB_VERSION
-FROM jupyterhub/jupyterhub-onbuild:$JUPYTERHUB_VERSION
+FROM jupyterhub/jupyterhub:$JUPYTERHUB_VERSION
 
-## Update the base install and add required packages.
+# Install required packages.
 
-RUN apt-get update \
-    && apt-get upgrade -y \
+RUN apt-get update -y \
     && apt-get install -y ca-certificates git \
-    && apt-get clean \
+    && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/* \
     #
-    && python3 -m pip install --no-cache-dir \
+    && python3 -m pip install -U --no-cache-dir \
+         pip \
+         setuptools \
+         wheel \
+    && python3 -m pip install -U --no-cache-dir \
          dockerspawner~=12.1 \
          oauthenticator~=14.2 \
          psycopg2-binary~=2.9 \
          git+https://github.com/scitokens/scitokens-jupyter.git@badd8c86ee071d6644c3d6c0164a748e899f21ba
 
-## Install TLS certificates.
+# Install the TLS certificate.
 
-ENV TLS_CRT /srv/jupyterhub/secrets/hub.crt
-ENV TLS_KEY /srv/jupyterhub/secrets/hub.key
+ENV TLS_CRT /certs/tls.crt
+ENV TLS_KEY /certs/tls.key
 
-COPY secrets/tls.crt $TLS_CRT
-COPY secrets/tls.key $TLS_KEY
-
-# We didn't create a CA certificate, so we have to munge the system bundle
-# by hand.
-
-COPY util/add_cert.py /build/add_cert.py
-
-RUN python3 /build/add_cert.py $TLS_CRT /etc/ssl/certs/ca-certificates.crt
+COPY secrets/tls.crt secrets/tls.key /certs/
+COPY util/add_cert.py /build/
+RUN python3 /build/add_cert.py /certs/tls.crt /etc/ssl/certs/ca-certificates.crt

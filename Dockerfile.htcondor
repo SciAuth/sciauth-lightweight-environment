@@ -1,10 +1,7 @@
-FROM htcondor/mini:9.10-el7
+FROM htcondor/mini:10.x-el8
 
-# We didn't create a CA certificate, so we have to munge the system bundle
-# by hand.
+# Install the TLS certificate.
 
-COPY secrets/tls.crt   /certs/
-COPY secrets/tls.key   /certs/
-COPY util/add_cert.py  /certs/
-
-RUN python3 /certs/add_cert.py /certs/tls.crt /etc/pki/tls/certs/ca-bundle.crt
+COPY secrets/tls.crt secrets/tls.key /certs/
+COPY util/add_cert.py /build/
+RUN python3 /build/add_cert.py /certs/tls.crt /etc/pki/tls/certs/ca-bundle.crt

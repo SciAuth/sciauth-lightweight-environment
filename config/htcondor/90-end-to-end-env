@@ -1,26 +1,32 @@
+#
+# Enable and configure SciTokens authentication.
+#
+
+# Restrict authentication to SciTokens and shared filesystem.
+SEC_CLIENT_AUTHENTICATION_METHODS = SCITOKENS, FS
 SEC_DEFAULT_AUTHENTICATION_METHODS = SCITOKENS, FS
 
+# Require SciTokens to have a specific 'aud' claim.
+SCITOKENS_SERVER_AUDIENCE = htcondor.localdomain
+
+# Define how to map the 'iss' and 'sub' claims to a local user.
 CERTIFICATE_MAPFILE = /etc/condor/condor_mapfile
 
+# SciTokens authentication requires communicating over SSL.
 AUTH_SSL_CLIENT_CERTFILE = /certs/tls.crt
 AUTH_SSL_CLIENT_KEYFILE = /certs/tls.key
 AUTH_SSL_SERVER_CERTFILE = /certs/tls.crt
 AUTH_SSL_SERVER_KEYFILE = /certs/tls.key
 
-COLLECTOR_DEBUG = $(COLLECTOR_DEBUG) D_SECURITY:2 D_NETWORK D_FULLDEBUG
-SCHEDD_DEBUG = $(SCHEDD_DEBUG) D_SECURITY:2 D_NETWORK D_FULLDEBUG
+#
+# Configure the HTCondor pool to be publically available.
+#
 
-# COLLECTOR_BOOTSTRAP_SSL_CERTIFICATE = true
-# TRUST_DOMAIN_CAFILE = /bootstrap/trust.crt
-# TRUST_DOMAIN_CAKEY = /bootstrap/trust.key
+# Override the default configuration for the local personal pool.
+CONDOR_HOST = htcondor.localdomain
+HOSTNAME = htcondor.localdomain
+NETWORK_INTERFACE = *
+SCHEDD_HOST = htcondor.localdomain
 
-SCITOKENS_SERVER_AUDIENCE = htcondor.localdomain
-
-COLLECTOR.SEC_ADVERTISE_STARTD_AUTHENTICATION_METHODS = FS,SCITOKENS,GSI
-COLLECTOR.SEC_READ_AUTHENTICATION_METHODS = FS,SCITOKENS,GSI
-COLLECTOR.SEC_WRITE_AUTHENTICATION_METHODS = FS,SCITOKENS,GSI
-MASTER.SEC_DEFAULT_AUTHENTICATION_METHODS = SCITOKENS, FS, GSI
-SCHEDD.SEC_READ_AUTHENTICATION_METHODS = FS,SCITOKENS,GSI
-SCHEDD.SEC_WRITE_AUTHENTICATION_METHODS = FS,SCITOKENS,GSI
-SEC_CLIENT_AUTHENTICATION_METHODS = SCITOKENS, FS, GSI, PASSWORD
-SEC_DEFAULT_AUTHENTICATION_METHODS = SCITOKENS,FS, GSI
+# Increase logging.
+ALL_DEBUG = D_ALWAYS:2 D_SECURITY:2 D_CAT

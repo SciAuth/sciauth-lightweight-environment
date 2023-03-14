@@ -1,4 +1,15 @@
 [req]
 distinguished_name=req
+
 [san]
-subjectAltName=DNS:localhost,DNS:localhost.localdomain,DNS:htcondor,DNS:htcondor.localdomain,DNS:jupyterhub,DNS:jupyterhub.localdomain,DNS:token-issuer,DNS:token-issuer.localdomain
+subjectAltName=@san_names
+
+[san_names]
+DNS.1 = localhost
+DNS.2 = localhost.localdomain
+DNS.3 = htcondor
+DNS.4 = htcondor.localdomain
+DNS.5 = jupyterhub
+DNS.6 = jupyterhub.localdomain
+DNS.7 = token-issuer
+DNS.8 = token-issuer.localdomain

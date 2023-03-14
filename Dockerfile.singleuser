@@ -5,25 +5,21 @@
 ARG SINGLEUSER_BASE_IMAGE
 FROM $SINGLEUSER_BASE_IMAGE
 
-## Update the base install and add required packages.
-
 USER root
 
-RUN apt-get update \
- && apt-get upgrade -y \
+# Install required packages and configuration.
+
+RUN apt-get update -y \
  && apt-get install -y curl jq \
  && apt-get clean -y \
  && rm -rf /var/lib/apt/lists/*
 
-COPY config/htcondor/99-notebook /etc/condor/config.d
+COPY config/htcondor/90-end-to-end-env /etc/condor/config.d/
 
-# We didn't create a CA certificate, so we have to munge the system bundle
-# by hand.
+# Install the TLS certificate.
 
-COPY secrets/tls.crt   /certs/
-COPY secrets/tls.key   /certs/
-COPY util/add_cert.py  /certs/
-
-RUN python3 /certs/add_cert.py /certs/tls.crt /etc/ssl/certs/ca-certificates.crt
+COPY secrets/tls.crt secrets/tls.key /certs/
+COPY util/add_cert.py /build/
+RUN python3 /build/add_cert.py /certs/tls.crt /etc/ssl/certs/ca-certificates.crt
 
 USER $NB_UID:$NB_GID
