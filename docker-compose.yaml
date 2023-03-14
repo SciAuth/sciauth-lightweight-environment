@@ -58,7 +58,6 @@ services:
     volumes:
     - hub:${HUB_VOLUME_PATH}
     - /var/run/docker.sock:/var/run/docker.sock:rw
-    - ./config/jupyterhub/config.py::ro
 
   hub-db:
     image: postgres:14.2

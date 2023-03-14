@@ -3,11 +3,11 @@ oauth2:
 - name: Lightweight Token Issuer
   id: lightweight-issuer
 
-  client_id: oa4mp:/client_id/32163b076dd5194a29cc32849011c92f
-  client_secret: ""
-
-  device_auth_url: https://token-issuer:8443/scitokens-server/device_authorization
+  auth_url: https://localhost:8443/scitokens-server/authorize
   token_url: https://token-issuer:8443/scitokens-server/token
   scope: openid
 
-  tls_cert: /srv/jupyterhub/secrets/hub.crt
+  device_auth_url: https://token-issuer:8443/scitokens-server/device_authorization
+
+  client_id: oa4mp:/client_id/32163b076dd5194a29cc32849011c92f
+  client_secret: ""
