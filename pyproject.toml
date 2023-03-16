@@ -7,12 +7,12 @@ requires = ["poetry-core>=1.0.0"]
 
 
 [tool.black]
-line-length = 96
+line-length = 80
 target-version = ["py38", "py39", "py310", "py311"]
 
 
 [tool.isort]
-line_length = 96
+line_length = 80
 profile = "black"
 
 
@@ -60,17 +60,17 @@ python = ">=3.8,<3.12"
 
 [tool.poetry.group.dev.dependencies]
 bandit = "~1.7"
-black = "~22.12"
+black = "~23.1"
 docutils = "~0.19"
-isort = "~5.11"
+isort = "~5.12"
 markdown = "~3.4"
-mypy = "~0.991"
-pre-commit = "~3.0"
-pylint = "~2.15"
+mypy = "~1.1"
+pre-commit = "~3.1"
+pylint = "~2.17"
 "ruamel.yaml.cmd" = "~0.6"
 safety = "~2.3"
 
 
 [tool.pylint.messages-control]
-max-line-length = 96
+max-line-length = 80
 disable = "invalid-name,missing-class-docstring,missing-function-docstring"

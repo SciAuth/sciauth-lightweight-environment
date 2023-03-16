@@ -10,5 +10,7 @@
 ## Sensitive configuration data.
 /secrets/
 
-## VS Code's workspace configuration and data.
+## Directories used by various IDEs.
+/.idea/
 /.vscode/
+/venv/
