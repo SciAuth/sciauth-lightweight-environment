@@ -1,5 +1,10 @@
 FROM htcondor/mini:10.x-el8
 
+# Install configuration.
+
+COPY config/htcondor/condor_mapfile /etc/condor/
+COPY config/htcondor/90-end-to-end-env /etc/condor/config.d/
+
 # Install the TLS certificate.
 
 COPY secrets/tls.crt secrets/tls.key /certs/

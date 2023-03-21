@@ -50,8 +50,6 @@ services:
     - 443:443
 
     secrets:
-    - source: jupyterhub-config
-      target: /srv/jupyterhub/config.py
     - source: scitokens-service-config
       target: /etc/scitokens/jupyterhub_service.yaml
 
@@ -83,8 +81,10 @@ services:
     - secrets/oauth.env
 
     environment:
-      # Normally, the token issuer would be on the same network as the users
-      # requesting tokens and resource providers validating tokens.
+      # When a user requests a token, they will be interacting with the
+      # token issuer from outside of the Docker network for this Compose
+      # setup. The hostname set below is what will be embedded into the
+      # URLs they see for for requesting a token, etc.
 
       HOSTNAME: localhost:8443
 
@@ -125,10 +125,6 @@ services:
     - 9618:9618
 
     secrets:
-    - source: htcondor-end-to-end-env
-      target: /etc/condor/config.d/90-end-to-end-env
-    - source: htcondor-mapfile
-      target: /etc/condor/condor_mapfile
     - source: tls-crt
       target: /certs/tls.crt
     - source: tls-key
@@ -153,18 +149,8 @@ services:
     ports:
     - 3001:8443
 
-
 secrets:
   # These "secrets" are used to inject files into the containers.
-
-  htcondor-end-to-end-env:
-    file: config/htcondor/90-end-to-end-env
-
-  htcondor-mapfile:
-    file: config/htcondor/condor_mapfile
-
-  jupyterhub-config:
-    file: config/jupyterhub/config.py
 
   scitokens-service-config:
     file: secrets/jupyterhub_svc_config.yaml

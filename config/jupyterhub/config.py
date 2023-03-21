@@ -9,7 +9,7 @@ c = get_config()
 
 # --------------------------------------------------------------------------
 
-# This first section contains the configuration that is specific to the
+# This first section contains configuration that is specific to the
 # lightweight environment. The later sections contain standard configuration
 # for JupyterHub and DockerSpawner.
 
@@ -47,7 +47,10 @@ c.JupyterHub.hub_port = 8080
 
 # Configure persistent storage.
 data_dir = os.environ["HUB_VOLUME_PATH"]
-c.JupyterHub.cookie_secret_file = os.path.join(data_dir, "jupyterhub_cookie_secret")
+c.JupyterHub.cookie_secret_file = os.path.join(
+    data_dir,
+    "jupyterhub_cookie_secret",
+)
 
 pg_host = os.environ["POSTGRES_HOST"]
 pg_password = os.environ["POSTGRES_PASSWORD"]
@@ -73,7 +76,9 @@ c.DockerSpawner.extra_host_config = {"network_mode": network_name}
 # Set the notebook directory, and mount the user's Docker volume.
 notebook_dir = os.environ["SINGLEUSER_VOLUME_PATH"]
 c.DockerSpawner.notebook_dir = notebook_dir
-c.DockerSpawner.volumes = {"jupyterhub-user-{username}": notebook_dir}
+c.DockerSpawner.volumes = {
+    "sciauth-env-jupyterhub-user-{username}": notebook_dir,
+}
 
 # Enable debug logging.
 c.DockerSpawner.debug = True

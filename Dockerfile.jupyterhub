@@ -5,7 +5,7 @@
 ARG JUPYTERHUB_VERSION
 FROM jupyterhub/jupyterhub:$JUPYTERHUB_VERSION
 
-# Install required packages.
+# Install required packages and configuration.
 
 RUN apt-get update -y \
     && apt-get install -y ca-certificates git \
@@ -21,6 +21,8 @@ RUN apt-get update -y \
          oauthenticator~=14.2 \
          psycopg2-binary~=2.9 \
          git+https://github.com/scitokens/scitokens-jupyter.git@badd8c86ee071d6644c3d6c0164a748e899f21ba
+
+COPY config/jupyterhub/config.py /srv/jupyterhub/
 
 # Install the TLS certificate.
 
