@@ -4,9 +4,9 @@
 
 include .env
 
-.PHONY: all build clean config docker secrets
+.PHONY: all build clean config docker local secrets
 
-all: build
+all local: build
 
 build: config docker secrets
 
