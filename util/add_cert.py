@@ -15,7 +15,7 @@ def main():
         cert = textwrap.dedent(
             """\
 
-            # SciAuth Lightweight Environment Self-Signed Certificate
+            # SciAuth Environment Self-Signed Certificate
             """
         )
         cert += fp.read()
