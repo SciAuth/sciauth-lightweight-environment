@@ -47,7 +47,7 @@ services:
     - hub-db
 
     ports:
-    - 443:443
+    - ${JUPYTERHUB_EXTERNAL_PORT}:443
 
     secrets:
     - source: scitokens-service-config
@@ -89,7 +89,7 @@ services:
       HOSTNAME: localhost:8443
 
     ports:
-    - 8443:8443
+    - ${TOKEN_ISSUER_EXTERNAL_PORT}:8443
 
     secrets:
     - source: token-issuer-client
