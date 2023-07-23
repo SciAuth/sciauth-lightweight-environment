@@ -12,7 +12,7 @@ build: config docker secrets
 
 	# Build services and the images that they depend on.
 
-	docker compose build --pull
+	docker compose build
 
 clean:
 
@@ -53,7 +53,6 @@ docker: secrets
 	# Build images that are not in the Docker Compose setup.
 
 	docker build -f Dockerfile.singleuser -t $(SINGLEUSER_IMAGE) \
-	  --pull \
 	  --build-arg SINGLEUSER_BASE_IMAGE=$(SINGLEUSER_BASE_IMAGE) \
 	  .
 
@@ -102,9 +101,7 @@ secrets/token-issuer.jwks:
 	# Use the SciTokens library to generate the signing key for the
 	# lightweight token issuer.
 
-	docker build -f Dockerfile.scitokens -t $(SCITOKENS_IMAGE) \
-	  --pull \
-	  .
+	docker build -f Dockerfile.scitokens -t $(SCITOKENS_IMAGE) .
 
 	docker run --rm $(SCITOKENS_IMAGE) \
 	  python3 -m scitokens.tools.admin_create_key \
