@@ -16,10 +16,12 @@ build: config docker secrets
 
 clean:
 
+	# Stop and remove containers.
+	-docker compose down
+
 	# Remove Docker networks and volumes created by this Makefile.
 	# Retain user data volumes.
 	# Retain user configuration and secrets.
-
 	-docker image rm $(HTCONDOR_IMAGE) $(JUPYTERHUB_IMAGE) $(SCITOKENS_IMAGE) $(SINGLEUSER_IMAGE)
 	-docker network rm $(DOCKER_NETWORK_NAME)
 	-docker volume rm $(DB_VOLUME_NAME) $(HUB_VOLUME_NAME) $(TOKEN_ISSUER_VOLUME_NAME)
