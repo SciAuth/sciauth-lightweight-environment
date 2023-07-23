@@ -1,4 +1,4 @@
-FROM htcondor/mini:10.x-el8
+FROM htcondor/mini:10.2.0-el8
 
 # Install configuration.
 
