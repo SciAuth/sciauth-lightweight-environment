@@ -130,25 +130,6 @@ services:
     - source: tls-key
       target: /certs/tls.key
 
-  restdemo:
-    image: vuanh2103/cashman-flask:latest
-    container_name: restdemo
-    restart: always
-
-    environment:
-      FLASK_APP: wsgi.py
-      AUTH0_DOMAIN: dev-7jgsf20u.us.auth0.com
-      API_IDENTIFIER: https://cashman/api
-
-    secrets:
-    - source: tls-crt
-      target: /certs/tls.crt
-    - source: tls-key
-      target: /certs/tls.key
-
-    ports:
-    - 3001:8443
-
 secrets:
   # These "secrets" are used to inject files into the containers.
 
