@@ -29,15 +29,13 @@ clean:
 #---------------------------------------------------------------------------
 
 config: secrets
-	make \
-	  secrets/jupyterhub_svc_config.yaml \
-	  secrets/user-config.json
-
-secrets/jupyterhub_svc_config.yaml:
 	cp templates/jupyterhub_svc_config.yaml secrets/
 
-secrets/user-config.json:
-	cp templates/user-config.json secrets/
+	sed -e s/\{INTERNAL_HOSTNAME\}/${MY}.token-issuer.localdomain:8443/g \
+	  < config/token-issuer/server-config.xml.tmpl \
+	  > secrets/server-config.xml.tmpl
+
+	[ -e secrets/user-config.json ] || cp templates/user-config.json secrets/
 
 docker: secrets
 

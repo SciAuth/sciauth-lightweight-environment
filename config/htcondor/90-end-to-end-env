@@ -23,10 +23,10 @@ AUTH_SSL_SERVER_KEYFILE = /certs/tls.key
 #
 
 # Override the default configuration for the local personal pool.
-CONDOR_HOST = htcondor.localdomain
-HOSTNAME = htcondor.localdomain
+CONDOR_HOST = $ENV(PREFIX).htcondor.localdomain
+HOSTNAME = $ENV(PREFIX).htcondor.localdomain
 NETWORK_INTERFACE = *
-SCHEDD_HOST = htcondor.localdomain
+SCHEDD_HOST = $ENV(PREFIX).htcondor.localdomain
 
 # Increase logging.
 ALL_DEBUG = D_ALWAYS:2 D_SECURITY:2 D_CAT

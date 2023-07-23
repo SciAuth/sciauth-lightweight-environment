@@ -7,6 +7,8 @@ import sys
 
 c = get_config()
 
+prefix = os.environ["PREFIX"]
+
 # --------------------------------------------------------------------------
 
 # This first section contains configuration that is specific to the
@@ -23,7 +25,7 @@ scitokens_service_port = os.environ["SCITOKENS_SERVICE_PORT"]
 c.JupyterHub.services = [
     {
         "name": "scitokens",
-        "url": f"http://jupyterhub:{scitokens_service_port}",
+        "url": f"http://{prefix}.jupyterhub:{scitokens_service_port}",
         "command": [sys.executable, "-m", "scitokens.jupyter.token_service"],
         "environment": {"SCITOKENS_SERVICE_PORT": scitokens_service_port},
     },
@@ -42,7 +44,7 @@ c.JupyterHub.port = 443
 c.JupyterHub.ssl_cert = os.environ["TLS_CRT"]
 c.JupyterHub.ssl_key = os.environ["TLS_KEY"]
 
-c.JupyterHub.hub_ip = "jupyterhub"
+c.JupyterHub.hub_ip = f"{prefix}.jupyterhub"
 c.JupyterHub.hub_port = 8080
 
 # Configure persistent storage.

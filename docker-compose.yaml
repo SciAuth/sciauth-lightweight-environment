@@ -9,9 +9,7 @@ services:
 
   hub:
     depends_on:
-    - htcondor
     - hub-db
-    - token-issuer
 
     build:
       context: .
@@ -20,7 +18,6 @@ services:
         JUPYTERHUB_VERSION: ${JUPYTERHUB_VERSION}
 
     image: ${JUPYTERHUB_IMAGE}
-    container_name: jupyterhub
     restart: always
 
     command: jupyterhub -f /srv/jupyterhub/config.py
@@ -30,12 +27,14 @@ services:
     - secrets/postgres.env
 
     environment:
+      PREFIX: ${MY}
+
       DOCKER_NETWORK_NAME: ${DOCKER_NETWORK_NAME}
 
       HUB_VOLUME_PATH: ${HUB_VOLUME_PATH}
 
       POSTGRES_DB: ${POSTGRES_DB}
-      POSTGRES_HOST: hub-db
+      POSTGRES_HOST: ${MY}.hub-db
 
       SINGLEUSER_IMAGE: ${SINGLEUSER_IMAGE}
       SINGLEUSER_CMD: ${SINGLEUSER_CMD}
@@ -46,8 +45,13 @@ services:
     links:
     - hub-db
 
+    networks:
+      sciauth-env:
+        aliases:
+        - ${MY}.jupyterhub
+
     ports:
-    - ${JUPYTERHUB_EXTERNAL_PORT}:443
+    - "${JUPYTERHUB_EXTERNAL_PORT}:443"
 
     secrets:
     - source: scitokens-service-config
@@ -59,7 +63,6 @@ services:
 
   hub-db:
     image: postgres:14.2
-    container_name: jupyterhub-db
     restart: always
 
     env_file:
@@ -69,12 +72,16 @@ services:
       PGDATA: ${DB_VOLUME_PATH}
       POSTGRES_DB: ${POSTGRES_DB}
 
+    networks:
+      sciauth-env:
+        aliases:
+        - ${MY}.hub-db
+
     volumes:
     - db:${DB_VOLUME_PATH}
 
   token-issuer:
     image: hub.opensciencegrid.org/sciauth/lightweight-issuer:v1.0.2
-    container_name: token-issuer.localdomain
     restart: always
 
     env_file:
@@ -86,10 +93,15 @@ services:
       # setup. The hostname set below is what will be embedded into the
       # URLs they see for for requesting a token, etc.
 
-      HOSTNAME: localhost:8443
+      HOSTNAME: ${TOKEN_ISSUER_EXTERNAL_HOSTNAME}
+
+    networks:
+      sciauth-env:
+        aliases:
+        - ${MY}.token-issuer.localdomain
 
     ports:
-    - ${TOKEN_ISSUER_EXTERNAL_PORT}:8443
+    - "${TOKEN_ISSUER_EXTERNAL_PORT}:8443"
 
     secrets:
     - source: token-issuer-client
@@ -116,13 +128,20 @@ services:
       dockerfile: Dockerfile.htcondor
 
     image: ${HTCONDOR_IMAGE}
-    container_name: htcondor.localdomain
     restart: always
 
-    hostname: htcondor.localdomain
+    environment:
+      PREFIX: ${MY}
 
-    ports:
-    - 9618:9618
+    expose:
+    - 9618
+
+    hostname: ${MY}.htcondor.localdomain
+
+    networks:
+      sciauth-env:
+        aliases:
+        - ${MY}.htcondor.localdomain
 
     secrets:
     - source: tls-crt
@@ -140,7 +159,7 @@ secrets:
     file: secrets/token-issuer.jwks
 
   token-issuer-server-config-template:
-    file: config/token-issuer/server-config.xml.tmpl
+    file: secrets/server-config.xml.tmpl
 
   token-issuer-user-config:
     file: secrets/user-config.json
@@ -159,7 +178,7 @@ secrets:
     file: secrets/tls.key
 
 networks:
-  default:
+  sciauth-env:
     name: ${DOCKER_NETWORK_NAME}
     external: true
 

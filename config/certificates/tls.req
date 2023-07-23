@@ -13,3 +13,6 @@ DNS.5 = jupyterhub
 DNS.6 = jupyterhub.localdomain
 DNS.7 = token-issuer
 DNS.8 = token-issuer.localdomain
+DNS.100 = *.htcondor.localdomain
+DNS.101 = *.jupyterhub.localdomain
+DNS.102 = *.token-issuer.localdomain

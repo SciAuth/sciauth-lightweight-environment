@@ -5,23 +5,11 @@
     "explicitly granted. These will simply be returned as the scope in the access token.",
     "https://wiki.refeds.org/display/STAN/eduPerson+2020-01#eduPerson202001-eduPersonEntitlement"
   ],
-  "http://cilogon.org/serverA/users/27161": {
-    "eduPersonEntitlement": [
-      "my_rabbit_server.write:xrd-mon/shoveled-xrd"
-    ],
-    "audience": "my_rabbit_server"
-  },
   "http://cilogon.org/serverA/users/279521": {
     "eduPersonEntitlement": [
       "condor:READ condor:WRITE"
     ],
     "audience": "htcondor.localdomain"
-  },
-  "http://cilogon.org/serverE/users/42403": {
-    "eduPersonEntitlement": [
-      "read:/properties write:/properties update:/properties delete:/properties/linh"
-    ],
-    "audience": "https://token-issuer.localdomain"
   },
   "default_claim": {
     "comment": [

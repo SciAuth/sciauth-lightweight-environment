@@ -1,4 +1,4 @@
 # Map anyone with a valid SciToken issued by the lightweight environment's
 # token issuer to the local `submituser` account.
 
-SCITOKENS ^https://token-issuer.localdomain:8443/scitokens-server,.*$ submituser
+SCITOKENS ^https://.*[.]token-issuer[.]localdomain:8443/scitokens-server,.*$ submituser
