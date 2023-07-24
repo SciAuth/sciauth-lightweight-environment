@@ -111,6 +111,8 @@ services:
       target: /opt/tomcat/conf/hostcert.pem
     - source: tls-key
       target: /opt/tomcat/conf/hostkey.pem
+    - source: token-issuer-proxy-config-template
+      target: /opt/scitokens-server/etc/proxy-config.xml.tmpl
     - source: token-issuer-server-config-template
       target: /opt/scitokens-server/etc/server-config.xml.tmpl
     - source: token-issuer-user-config
@@ -154,6 +156,9 @@ secrets:
 
   token-issuer-keys:
     file: secrets/token-issuer.jwks
+
+  token-issuer-proxy-config-template:
+    file: config/token-issuer/proxy-config.xml.tmpl
 
   token-issuer-server-config-template:
     file: secrets/server-config.xml.tmpl
