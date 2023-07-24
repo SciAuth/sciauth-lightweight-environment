@@ -34,6 +34,7 @@ c.JupyterHub.services = [
 # Prevent the singleuser image that we are using from starting its own local
 # HTCondor pool.
 c.DockerSpawner.environment = {
+    "PREFIX": prefix,
     "_condor_SCHEDD_HOST": f"{prefix}.htcondor.localdomain",
 }
 
