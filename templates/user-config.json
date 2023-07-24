@@ -1,21 +1,29 @@
 {
   "comment": [
-    "This JSON file contains claims (i.e. assertions about each user) which are used in issuing access tokens.",
-    "The key is the eppn of each user and the eduPersonEntitlement (a JSON array) containing the permissions",
-    "explicitly granted. These will simply be returned as the scope in the access token.",
-    "https://wiki.refeds.org/display/STAN/eduPerson+2020-01#eduPerson202001-eduPersonEntitlement"
+    "This JSON file contains claims (i.e. assertions about each user) which",
+    "are used in issuing access tokens. The key is the ePPN of each user and",
+    "the eduPersonEntitlement is a JSON array containing the permissions",
+    "explicitly granted. These will simply be returned as the scope in the",
+    "access token.",
+    "",
+    "Reference: https://wiki.refeds.org/display/STAN/eduPerson+2020-01#eduPerson202001-eduPersonEntitlement"
   ],
+  "default_claim": {
+    "comment": [
+      "This is the default claim returned by the handler if you specify",
+      "use_default as part of the st.qdl script."
+    ],
+    "eduPersonEntitlement": ["storage.read:/public/guest"]
+  },
   "http://cilogon.org/serverA/users/279521": {
+    "comment": [
+      "These claims allow the user to interact with an HTCondor pool as they",
+      "would normally expect. Note that the pool might further restrict what",
+      "the user may do based on its own policy configuration."
+    ],
     "eduPersonEntitlement": [
       "condor:READ condor:WRITE"
     ],
     "audience": "htcondor.localdomain"
-  },
-  "default_claim": {
-    "comment": [
-      "This is the default claim returned by the handler **if** you specify use_default",
-      "as part of the st.qdl script"
-    ],
-    "eduPersonEntitlement": ["storage.read:/public/guest"]
   }
 }
